@@ -1,9 +1,9 @@
 class Rect {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    
-    this.update();
+  constructor(config) {
+    this.top = config.top;
+    this.bottom = config.bottom;
+    this.left = config.left;
+    this.right = config.right;
   }
 
   collideRect(otherRect) {
@@ -12,12 +12,5 @@ class Rect {
           return true;
         }
     return false; 
-  }
-
-  update() {
-    this.top = this.y;
-    this.bottom = this.y + 64;
-    this.left = this.x;
-    this.right = this.x + 64;
   }
 }

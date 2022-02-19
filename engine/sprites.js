@@ -8,7 +8,7 @@ class Sprites {
     }
     this.ctx = config.ctx;
 
-    this.rect = new Rect(config.x, config.y)
+    this.rect = new Rect({top: config.y, bottom: config.y + 64, left: config.x, right:  config.x + 64})
     // 64 is sprite size
   }
 
@@ -17,7 +17,7 @@ class Sprites {
     this.isLoaded && this.ctx.drawImage(this.image,
       0,0,
       64,64,
-      this.rect.x, this.rect.y,
+      this.rect.left, this.rect.top,
       64,64
     )
   }

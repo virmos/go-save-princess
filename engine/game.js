@@ -6,6 +6,7 @@ class Game {
     this.ctx = this.canvas.getContext("2d");
 
     this.map = null;
+    this.player = null;
     this.visibleSprites = [];
     this.obstacleSprites = [];
   }
@@ -34,15 +35,16 @@ class Game {
           this.obstacleSprites.push(new Sprites({x:x, y:y, src:"graphics/test/rock.png", ctx:this.ctx}));
         }
         if (row[colIndex] === 'p') {
-          this.visibleSprites.push(new Player({x:x, y:y,src:"graphics/test/player.png", ctx:this.ctx}, this.obstacleSprites));
+          this.player = new Player({x:x, y:y,src:"graphics/test/player.png", ctx:this.ctx}, this.obstacleSprites);
+          this.visibleSprites.push(this.player);
         }
       }
     }
   }
 
   render() {
-    this.obstacleSprites.forEach(element => element.update());
-    this.visibleSprites.forEach(element => element.update({ arrow: this.input.getDirection() }));
+    this.obstacleSprites.forEach(element => element.update({arrow: this.input.getDirection(), player: this.player }));
+    this.visibleSprites.forEach(element => element.update({ arrow: this.input.getDirection(), player: this.player }));
   }
  
   init() {

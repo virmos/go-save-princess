@@ -12,17 +12,19 @@ class Sprites {
     // 64 is sprite size
   }
 
-  draw() {
-    
+  draw(player) {
+    let offsetX = (player.rect.left + 32) - 1280 / 2; // player.rect.left, top + 32 to calculate center of player
+    let offsetY = (player.rect.top + 32) - 720 / 2;  // 
+
     this.isLoaded && this.ctx.drawImage(this.image,
       0,0,
       64,64,
-      this.rect.left, this.rect.top,
+      this.rect.left - offsetX, this.rect.top - offsetY,
       64,64
     )
   }
 
-  update() {
-    this.draw();
+  update(state) {
+    this.draw(state.player);
   }
 }

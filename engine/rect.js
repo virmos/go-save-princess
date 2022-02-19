@@ -4,6 +4,16 @@ class Rect {
     this.bottom = config.bottom;
     this.left = config.left;
     this.right = config.right;
+
+    this.width = this.right - this.left;
+    this.height = this.bottom - this.top;
+  }
+
+  update(config) {
+    this.top = config.top;
+    this.bottom = config.bottom;
+    this.left = config.left;
+    this.right = config.right;
   }
 
   collideRect(otherRect) {
@@ -12,5 +22,15 @@ class Rect {
           return true;
         }
     return false; 
+  }
+
+  inflate(overlapX, overlapY) {
+    return { top: this.top - overlapY, bottom: this.bottom + overlapY,
+                      left: this.left - overlapX, right: this.right + overlapX };
+  }
+
+  deflate(overlapX, overlapY) {
+    return { top: this.top + overlapY, bottom: this.bottom - overlapY,
+                      left: this.left + overlapX, right: this.right - overlapX };
   }
 }

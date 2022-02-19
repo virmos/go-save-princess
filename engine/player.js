@@ -5,6 +5,10 @@ class Player extends Sprites {
     this.direction = new Vector2D(0, 0)
     this.speed = 5;
     this.obstacleSprites = obstacleSprites;
+
+    this.overlapX = -14;
+    this.overlapY = -26;
+    this.hitbox = new Rect(this.rect.inflate(this.overlapX, this.overlapY));
   }
 
   move(arrow) {
@@ -29,27 +33,29 @@ class Player extends Sprites {
       this.direction.normalize();
     }
 
-    this.rect.top += this.direction.y * this.speed;
-    this.rect.bottom += this.direction.y * this.speed;
+    this.hitbox.top += this.direction.y * this.speed;
+    this.hitbox.bottom += this.direction.y * this.speed;
     this.collision('vertical')
 
-    this.rect.left += this.direction.x * this.speed;
-    this.rect.right += this.direction.x * this.speed;
+    this.hitbox.left += this.direction.x * this.speed;
+    this.hitbox.right += this.direction.x * this.speed;
     this.collision('horizontal')
+
+    this.rect.update(this.hitbox.deflate(this.overlapX, this.overlapY));
   }
   
   collision(verb) {
     if (verb === 'horizontal') {
       for (let spriteIndex in this.obstacleSprites) {
         let sprite = this.obstacleSprites[spriteIndex];
-        if (sprite.rect.collideRect(this.rect) === true) {
+        if (sprite.rect.collideRect(this.hitbox) === true) {
           if (this.direction.x > 0) {
-            this.rect.right = sprite.rect.left;
-            this.rect.left = this.rect.right - 64; // sprite size
+            this.hitbox.right = sprite.rect.left;
+            this.hitbox.left = this.hitbox.right - this.hitbox.width; // sprite size
           }
           if (this.direction.x < 0) {
-            this.rect.left = sprite.rect.right;
-            this.rect.right = this.rect.left + 64; // sprite size
+            this.hitbox.left = sprite.rect.right;
+            this.hitbox.right = this.hitbox.left + this.hitbox.width; // sprite size
           }
         }
       }
@@ -58,14 +64,14 @@ class Player extends Sprites {
     if (verb === 'vertical') {
       for (let spriteIndex in this.obstacleSprites) {
         let sprite = this.obstacleSprites[spriteIndex];
-        if (sprite.rect.collideRect(this.rect) === true) {
+        if (sprite.rect.collideRect(this.hitbox) === true) {
           if (this.direction.y > 0) {
-            this.rect.bottom = sprite.rect.top;
-            this.rect.top = this.rect.bottom - 64; // sprite size
+            this.hitbox.bottom = sprite.rect.top;
+            this.hitbox.top = this.hitbox.bottom - this.hitbox.height; // sprite size
           }
           if (this.direction.y < 0) {
-            this.rect.top = sprite.rect.bottom;
-            this.rect.bottom = this.rect.top + 64; // sprite size
+            this.hitbox.top = sprite.rect.bottom;
+            this.hitbox.bottom = this.hitbox.top + this.hitbox.height; // sprite size
           }
         }
       }
@@ -74,6 +80,6 @@ class Player extends Sprites {
 
   update(state) {
     this.move(state.arrow);
-    this.draw();
+    this.draw(state.player);
   }
 }

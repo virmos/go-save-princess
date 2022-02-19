@@ -23,8 +23,4 @@ class Sprites {
       64,64
     )
   }
-
-  update(state) {
-    this.draw(state.player);
-  }
 }

@@ -6,7 +6,7 @@ class Player extends Sprites {
     this.speed = 5;
     this.obstacleSprites = obstacleSprites;
 
-    this.overlapX = -14;
+    this.overlapX = -10;
     this.overlapY = -26;
     this.hitbox = new Rect(this.rect.inflate(this.overlapX, this.overlapY));
   }
@@ -80,6 +80,5 @@ class Player extends Sprites {
 
   update(state) {
     this.move(state.arrow);
-    this.draw(state.player);
   }
 }

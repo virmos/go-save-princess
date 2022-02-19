@@ -9,6 +9,7 @@ class Game {
     this.player = null;
     this.visibleSprites = [];
     this.obstacleSprites = [];
+    this.allSprites = [];
   }
  
   startGameLoop() {
@@ -17,7 +18,8 @@ class Game {
     const step = () => {
       //Clear off the canvas
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.render();
+      this.update();
+      this.draw();
       requestAnimationFrame(() => {
        step();   
       })
@@ -40,11 +42,16 @@ class Game {
         }
       }
     }
+    this.allSprites = this.obstacleSprites.concat(this.visibleSprites);
   }
 
-  render() {
-    this.obstacleSprites.forEach(element => element.update({arrow: this.input.getDirection(), player: this.player }));
-    this.visibleSprites.forEach(element => element.update({ arrow: this.input.getDirection(), player: this.player }));
+  update() {
+    this.visibleSprites.forEach(element => element.update({ arrow: this.input.getDirection() }));
+  }
+
+  draw() {
+    let sortedAllSprites = this.allSprites.sort(function(a, b){ return a.rect.top - b.rect.top; })
+    sortedAllSprites.forEach(element => element.draw(this.player));
   }
  
   init() {

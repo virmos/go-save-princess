@@ -10,6 +10,8 @@ class Keyboard {
       'KeyA': 'left',
       'ArrowRight': 'right',
       'KeyD': 'right',
+      'Space': 'space',
+      'Enter': 'enter'
     }
   }
 

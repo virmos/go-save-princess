@@ -1,17 +1,21 @@
 
 class Level {
   constructor(config) {
-    this.image = new Image();
-    this.image.src = config.src;
-    this.image.onload = () => {
-      this.isLoaded = true;
-    }
     this.ctx = config.ctx;
+    this.mapSprite = new Map({ src: config.src, ctx: this.ctx });
+    this.input = config.input;
 
     this.player = null;
     this.visibleSprites = [];
     this.obstacleSprites = [];
     this.allSprites = [];
+  }
+
+  isLoaded() {
+    if (SPRITE_COUNTER === this.allSprites.length) {
+      return true;
+    }
+    return false;
   }
 
   init() {
@@ -21,7 +25,8 @@ class Level {
   createMap() {
     let layouts = {
       'boundary': map_floor_blocks,
-      'grass': map_grass,
+      'grass': map_grasses,
+      'object': map_objects,
     }
     for (const [style, layoutMap] of Object.entries(layouts)) {
       for (let rowIndex = 0; rowIndex < layoutMap.length; rowIndex++) {
@@ -31,11 +36,15 @@ class Level {
             let x = colIndex * TILE_SIZE;
             let y = rowIndex * TILE_SIZE;
             if (style === 'boundary') {
-              this.obstacleSprites.push(new Sprites({x:x, y:y, spriteType:'invisible', ctx:this.ctx}));
+              this.obstacleSprites.push(new Sprites({x:x, y:y, src:"graphics/test/player.png", spriteType:'invisible', ctx:this.ctx}));
             }
             if (style === 'grass') {
               let randomGrassIndex = Math.floor(Math.random() * 3) + 1;
               this.obstacleSprites.push(new Sprites({x:x, y:y, src:`graphics/grass/grass_${randomGrassIndex}.png`, spriteType:'grass', ctx:this.ctx}));
+            }
+            if (style === 'object') {
+              let objectIndex = twoDigitNumber.format(row[colIndex]);
+              this.obstacleSprites.push(new Sprites({x:x, y:y, src:`graphics/objects/${objectIndex}.png`, spriteType:'object', ctx:this.ctx}));
             }
           }
         }
@@ -46,15 +55,13 @@ class Level {
     this.allSprites = this.obstacleSprites.concat(this.visibleSprites);
   }
 
-  draw() {
-    let offsetX = (this.player.rect.left + 32) - 1280 / 2; // player.rect.left, top + 32 to calculate center of player
-    let offsetY = (this.player.rect.top + 32) - 720 / 2;  // 
-
-    this.isLoaded && this.ctx.drawImage(this.image,
-      0,0,
-      3648,3200,  // image width and height
-      -offsetX, -offsetY,
-      3648,3200,
-    )
+  update() {
+    // sprites update
+    this.visibleSprites.forEach(element => element.update({ arrow: this.input.getDirection() }));
+    let sortedAllSprites = this.allSprites.sort(function(a, b){ return a.rect.top - b.rect.top; })
+    
+    // sprites draw
+    this.mapSprite.draw(this.player);
+    sortedAllSprites.forEach(element => element.draw(this.player));
   }
 }

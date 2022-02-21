@@ -2,16 +2,25 @@ class Player extends Sprites {
   constructor(config, obstacleSprites) {
     //Set up the image
     super(config);
+
+    this.overlapX = -10;
+    this.overlapY = -26;
+    
     this.direction = new Vector2D(0, 0)
     this.speed = 5;
     this.obstacleSprites = obstacleSprites;
 
-    this.overlapX = -10;
-    this.overlapY = -26;
-    this.hitbox = new Rect(this.rect.inflate(this.overlapX, this.overlapY));
+    this.isAttacking = false;
+    this.attackCooldownTimeout = 400;
   }
 
-  move(arrow) {
+  init() {
+    this.isLoaded = true;
+    this.hitbox = new Rect(this.rect.inflate(this.overlapX, this.overlapY));
+    SPRITE_COUNTER += 1;
+  }
+
+  input(arrow) {
     if (!arrow) {
       this.direction.x = 0;
       this.direction.y = 0;
@@ -33,6 +42,25 @@ class Player extends Sprites {
       this.direction.normalize();
     }
 
+    if (arrow ===  'enter'&& !this.isAttacking) {
+      console.log('attack')
+      this.isAttacking = true;
+      setTimeout(this.cooldown.bind(this), this.attackCooldownTimeout);
+    }
+
+    if (arrow === 'space' && !this.isAttacking) {
+      console.log('magic')
+      this.isAttacking = true;
+      setTimeout(this.cooldown.bind(this), this.attackCooldownTimeout);
+
+    }
+  }
+
+  cooldown() {
+    this.isAttacking = false;
+  }
+
+  move() {
     this.hitbox.top += this.direction.y * this.speed;
     this.hitbox.bottom += this.direction.y * this.speed;
     this.collision('vertical')
@@ -51,11 +79,11 @@ class Player extends Sprites {
         if (sprite.rect.collideRect(this.hitbox) === true) {
           if (this.direction.x > 0) {
             this.hitbox.right = sprite.rect.left;
-            this.hitbox.left = this.hitbox.right - this.hitbox.width; // sprite size
+            this.hitbox.left = this.hitbox.right - this.hitbox.width;
           }
           if (this.direction.x < 0) {
             this.hitbox.left = sprite.rect.right;
-            this.hitbox.right = this.hitbox.left + this.hitbox.width; // sprite size
+            this.hitbox.right = this.hitbox.left + this.hitbox.width;
           }
         }
       }
@@ -67,11 +95,11 @@ class Player extends Sprites {
         if (sprite.rect.collideRect(this.hitbox) === true) {
           if (this.direction.y > 0) {
             this.hitbox.bottom = sprite.rect.top;
-            this.hitbox.top = this.hitbox.bottom - this.hitbox.height; // sprite size
+            this.hitbox.top = this.hitbox.bottom - this.hitbox.height;
           }
           if (this.direction.y < 0) {
             this.hitbox.top = sprite.rect.bottom;
-            this.hitbox.bottom = this.hitbox.top + this.hitbox.height; // sprite size
+            this.hitbox.bottom = this.hitbox.top + this.hitbox.height;
           }
         }
       }
@@ -79,6 +107,7 @@ class Player extends Sprites {
   }
 
   update(state) {
-    this.move(state.arrow);
+    this.input(state.arrow);
+    this.move();
   }
 }

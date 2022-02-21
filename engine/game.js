@@ -5,38 +5,34 @@ class Game {
     this.canvas = this.element.querySelector(".game-canvas");
     this.ctx = this.canvas.getContext("2d");
 
-    this.level = new Level({ src: "graphics/tilemap/ground.png", ctx: this.ctx });
+    this.input = new Keyboard();
+    this.input.init();
+    this.level = new Level({ src: "graphics/tilemap/ground.png", ctx: this.ctx, input: this.input });
   }
 
   init() {
-    this.input = new Keyboard();
-    this.input.init();
-    this.startGameLoop();
- 
+    this.level.init();
+    const checkIfLevelLoaded = () => {
+      let startId = requestAnimationFrame(() => {
+        checkIfLevelLoaded();   
+      })
+      if (this.level.isLoaded() === true) {
+        this.startGameLoop();
+        cancelAnimationFrame(startId);
+      }
+    }
+    checkIfLevelLoaded();
   }
  
   startGameLoop() {
-    this.level.init();
-
     const step = () => {
       //Clear off the canvas
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.update();
-      this.draw();
+      this.level.update();
       requestAnimationFrame(() => {
        step();   
       })
     }
     step();
-  }
-
-  update() {
-    this.level.visibleSprites.forEach(element => element.update({ arrow: this.input.getDirection() }));
-  }
-
-  draw() {
-    this.level.draw();
-    let sortedAllSprites = this.level.allSprites.sort(function(a, b){ return a.rect.top - b.rect.top; })
-    sortedAllSprites.forEach(element => element.draw(this.level.player));
   }
 }

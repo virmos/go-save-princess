@@ -50,7 +50,12 @@ class Level {
         }
       }
     }
-    this.player = new Player({x:2000, y:1000,src:"graphics/test/player.png", spriteType:'player', ctx:this.ctx}, this.obstacleSprites);
+    this.player = new Player({x:2000, y:1000, src:"graphics/test/player.png", 
+                              animationSprites: player_animation_sprites, 
+                              totalAnimationSprites: num_player_animation_sprites, 
+                              spriteType:'player', overlapX: -10, overlapY: -26,
+                              ctx:this.ctx}, this.obstacleSprites);
+
     this.visibleSprites.push(this.player);
     this.allSprites = this.obstacleSprites.concat(this.visibleSprites);
   }

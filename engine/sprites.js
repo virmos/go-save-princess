@@ -20,7 +20,6 @@ class Sprites {
   }
 
   init() {
-    this.isLoaded = true;
     SPRITE_COUNTER += 1;
   };
 

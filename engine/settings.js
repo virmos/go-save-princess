@@ -61,6 +61,22 @@ monster_data = {
   'spirit': {'health': 100,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'../audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
   'bamboo': {'health': 70,'exp':120,'damage':6,'attack_type': 'leaf_attack', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
 
+player_animation_sprites = {
+  'up': ['graphics/player/up/up_0.png', 'graphics/player/up/up_1.png', 'graphics/player/up/up_2.png', 'graphics/player/up/up_3.png'], 
+  'up_idle': ['graphics/player/up_idle/idle_up.png'], 
+  'up_attack': ['graphics/player/up_attack/attack_up.png'],
+  'down': ['graphics/player/down/down_0.png', 'graphics/player/down/down_1.png', 'graphics/player/down/down_2.png', 'graphics/player/down/down_3.png',], 
+  'down_idle': ['graphics/player/down_idle/idle_down.png'], 
+  'down_attack': ['graphics/player/down_attack/attack_down.png'],
+  'left': ['graphics/player/left/left_0.png', 'graphics/player/left/left_1.png', 'graphics/player/left/left_2.png', 'graphics/player/left/left_3.png',], 
+  'left_idle': ['graphics/player/left_idle/idle_left.png'], 
+  'left_attack': ['graphics/player/left_attack/attack_left.png'],
+  'right': ['graphics/player/right/right_0.png', 'graphics/player/right/right_1.png', 'graphics/player/right/right_2.png', 'graphics/player/right/right_3.png',], 
+  'right_idle': ['graphics/player/right_idle/idle_right.png'], 
+  'right_attack': ['graphics/player/right_attack/attack_right.png']}
+
+num_player_animation_sprites = 24
+
 map_grasses = [['-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', 
 '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', 
 '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1'], ['-1', 

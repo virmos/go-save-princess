@@ -1,23 +1,14 @@
-class Player extends Sprites {
+class Player extends AnimationSprites {
   constructor(config, obstacleSprites) {
     //Set up the image
     super(config);
-
-    this.overlapX = -10;
-    this.overlapY = -26;
     
-    this.direction = new Vector2D(0, 0)
-    this.speed = 5;
     this.obstacleSprites = obstacleSprites;
+    this.direction = new Vector2D(0, 0);
 
+    this.status = 'down';
     this.isAttacking = false;
     this.attackCooldownTimeout = 400;
-  }
-
-  init() {
-    this.isLoaded = true;
-    this.hitbox = new Rect(this.rect.inflate(this.overlapX, this.overlapY));
-    SPRITE_COUNTER += 1;
   }
 
   input(arrow) {
@@ -28,14 +19,18 @@ class Player extends Sprites {
 
     if (arrow === 'up') {
       this.direction.y = -1;
+      this.status = 'up';
     }  else if (arrow === 'down') {
       this.direction.y = 1;
+      this.status = 'down';
     }  
 
     if (arrow === 'left') {
       this.direction.x = -1;
+      this.status = 'left';
     }  else if (arrow === 'right') {
       this.direction.x = 1;
+      this.status = 'right';
     } 
     
     if (this.direction.magnitude() != 0) {
@@ -43,17 +38,37 @@ class Player extends Sprites {
     }
 
     if (arrow ===  'enter'&& !this.isAttacking) {
-      console.log('attack')
       this.isAttacking = true;
       setTimeout(this.cooldown.bind(this), this.attackCooldownTimeout);
     }
 
     if (arrow === 'space' && !this.isAttacking) {
-      console.log('magic')
       this.isAttacking = true;
       setTimeout(this.cooldown.bind(this), this.attackCooldownTimeout);
-
     }
+  }
+
+  getStatus() {
+    if (this.direction.x === 0 && this.direction.y === 0)
+      if (this.status.indexOf('_idle') === -1 && this.status.indexOf('_attack') === -1)
+        this.status = this.status.concat('_idle');
+
+    if (this.isAttacking)
+      if (this.status.indexOf('_attack') === -1)
+        if (this.status.indexOf('_idle') !== -1)
+          this.status = this.status.replace('_idle', '_attack');
+        else 
+          this.status= this.status.concat('_attack');
+    else
+      this.status = this.status.replace('_attack', '');
+  }
+
+  animate() {
+    let animation = this.animations[this.status];
+    this.animationIndex += this.animationSpeed;
+    if (this.animationIndex >= animation.length)
+      this.animationIndex = 0;
+    this.image = animation[parseInt(this.animationIndex)];   
   }
 
   cooldown() {
@@ -108,6 +123,8 @@ class Player extends Sprites {
 
   update(state) {
     this.input(state.arrow);
+    this.getStatus();
+    this.animate();
     this.move();
   }
 }

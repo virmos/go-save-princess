@@ -2,6 +2,7 @@ class AnimationSprites {
   constructor(config) {
     //Set up the image
     this.ctx = config.ctx;
+    this.player = this;
     this.src = config.src;
     this.spriteType = config.spriteType;
 
@@ -42,16 +43,16 @@ class AnimationSprites {
 
   loadDefaultSprite() {
     this.image.src = this.src;
-    this.image.onload = this.loadDefaultComplete.bind(this);
+    this.image.onload = this.createDefaultHitbox.bind(this);
   }
 
-  loadDefaultComplete() {
+  createDefaultHitbox() {
     this.localSpriteCounter += 1;
-    let imageOffsetY = this.spriteType === 'object' ? TILE_SIZE : 0;
 
-    this.rect = new Rect({top: this.y - imageOffsetY, bottom: this.y + this.image.height - imageOffsetY, 
-                          left: this.x, right:  this.x + this.image.width});
-    this.hitbox = new Rect(this.rect.inflate(this.overlapX, this.overlapY));
+    this.rect = new Rect(this.x, this.y, this.image.width, this.image.height);
+
+    let { x, y, width, height } = this.rect.inflate(this.overlapX, this.overlapY);
+    this.hitbox = new Rect(x, y, width, height);
   }
 
   loadAnimationSprites() {
@@ -60,12 +61,12 @@ class AnimationSprites {
       for (let sourceIndex in animationSources) {
         let animationImage = new Image();
         animationImage.src = animationSources[sourceIndex];
-        animationImage.onload = this.loadAnimationComplete.bind(caller, animationName, animationImage);
+        animationImage.onload = this.createAnimationHitbox.bind(caller, animationName, animationImage);
       }
     }
   }
 
-  loadAnimationComplete(animationName, animationImage) {
+  createAnimationHitbox(animationName, animationImage) {
     this.animations[animationName].push(animationImage);
     this.localSpriteCounter += 1;
     if (this.localSpriteCounter === this.totalLocalSprites) {
@@ -77,19 +78,16 @@ class AnimationSprites {
     SPRITE_COUNTER += 1;
   };
 
-  draw(player) {
-    if (this.spriteType === 'invisible')
+  draw() {
+    if (this.spriteType === 'invisible' || !this.rect) // if invisible sprite or sprite is not loaded
       return;
-
-    if (!this.image)
-      console.log(this)
     
-    let offsetX = (player.rect.left + TILE_SIZE / 2) - SCREEN_WIDTH / 2;  // player.rect.left, top + TILE_SIZE / 2 to calculate center of player
-    let offsetY = (player.rect.top + TILE_SIZE / 2) - SCREEN_HEIGHT / 2;  // 
+    let offsetX = (this.player.rect.x + TILE_SIZE / 2) - SCREEN_WIDTH / 2;  // player.rect.left, top + TILE_SIZE / 2 to calculate center of player
+    let offsetY = (this.player.rect.y + TILE_SIZE / 2) - SCREEN_HEIGHT / 2;  // 
     this.ctx.drawImage(this.image,
       0,0,
       this.image.width,this.image.height,
-      this.rect.left - offsetX, this.rect.top - offsetY,
+      this.rect.x - offsetX, this.rect.y - offsetY,
       this.image.width,this.image.height
     )
   }

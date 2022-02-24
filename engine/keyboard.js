@@ -11,7 +11,9 @@ class Keyboard {
       'ArrowRight': 'right',
       'KeyD': 'right',
       'Space': 'space',
-      'Enter': 'enter'
+      'Enter': 'enter',
+      'KeyQ': 'q',
+      'KeyE': 'e',
     }
   }
 

@@ -1,19 +1,28 @@
 class Rect {
-  constructor(config) {
-    this.top = config.top;
-    this.bottom = config.bottom;
-    this.left = config.left;
-    this.right = config.right;
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
 
-    this.width = this.right - this.left;
-    this.height = this.bottom - this.top;
+    this.top = y;
+    this.bottom = y + height;
+    this.left = x;
+    this.right = x + width;
+
+    this.width = width;
+    this.height = height;
   }
 
-  update(config) {
-    this.top = config.top;
-    this.bottom = config.bottom;
-    this.left = config.left;
-    this.right = config.right;
+  update(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+
+    this.top = y;
+    this.bottom = y + height;
+    this.left = x;
+    this.right = x + width;
+
+    this.x = this.left;
+    this.y = this.top;
   }
 
   collideRect(otherRect) {
@@ -25,12 +34,19 @@ class Rect {
   }
 
   inflate(overlapX, overlapY) {
-    return { top: this.top - overlapY, bottom: this.bottom + overlapY,
-                      left: this.left - overlapX, right: this.right + overlapX };
+    let x = this.left + overlapX;
+    let y = this.top + overlapY;
+    let width = this.width - 2 * overlapX; 
+    let height = this.height - 2 * overlapY; 
+    
+    return { x: x, y:y, width: width, height: height };
   }
 
   deflate(overlapX, overlapY) {
-    return { top: this.top + overlapY, bottom: this.bottom - overlapY,
-                      left: this.left + overlapX, right: this.right - overlapX };
+    let x = this.left - overlapX;
+    let y = this.top - overlapY;
+    let width = this.width + 2 * overlapX; 
+    let height = this.height + 2 * overlapY; 
+    return { x: x, y:y, width: width, height: height };
   }
 }

@@ -18,11 +18,13 @@ MAP_HEIGHT = 3200
 
 // ui 
 BAR_HEIGHT = 20
+BORDER_SIZE = 5
 HEALTH_BAR_WIDTH = 200
 ENERGY_BAR_WIDTH = 140
 ITEM_BOX_SIZE = 80
-UI_FONT = '../graphics/font/joystix.ttf'
-UI_FONT_SIZE = 18
+UI_FONT = 'Georgia'
+UI_FONT_SIZE = 30
+UI_MARGIN = 10
 
 // general colors
 WATER_COLOR = '#71ddee'

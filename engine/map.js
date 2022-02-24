@@ -1,5 +1,6 @@
-class Map extends Sprites {
+class Map extends Sprite {
   constructor(config) {
+    config.spriteType = 'map';
     super(config);
   }
 

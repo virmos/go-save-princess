@@ -1,5 +1,6 @@
-class Magic extends Sprites {
+class Magic extends Sprite {
   constructor(config) {
+    config.spriteType = 'magic';
     super(config);
   }
 

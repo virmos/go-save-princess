@@ -1,4 +1,4 @@
-class Sprites {
+class Sprite {
   constructor(config) {
     //Set up the image
     this.ctx = config.ctx;
@@ -19,7 +19,7 @@ class Sprites {
   }
 
   createDefaultHitbox() {
-    let imageOffsetY = this.spriteType === 'object' ? TILE_SIZE : 0;
+    let imageOffsetY = this.spriteType === 'object' ? TILE_SIZE : 0; // can replace TILE_SIZE = this.image.height / 2
       
     this.rect = new Rect(this.x, this.y - imageOffsetY, this.image.width, this.image.height);
 

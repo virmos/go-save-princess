@@ -1,9 +1,27 @@
-class Player extends AnimationSprites {
+class Player extends Entity {
   constructor(config, createWeapon, destroyWeapon, createMagic, destroyMagic) {
     //Set up the image
-    config.src = "graphics/test/player.png";
+    config.spriteType = 'player';
+    config.src = `graphics/${config.spriteType}/down/down_0.png`;
     config.animationSprites = player_animation_sprites;
     config.totalAnimationSprites = num_player_animation_sprites;
+    config.animations = {
+      'up': [],
+      'up_idle': [], 
+      'up_attack': [], 
+      'down': [], 
+      'down_idle':[],
+      'down_attack': [],
+      'left': [], 
+      'left_idle': [],
+      'left_attack': [],
+      'right': [],
+      'right_idle': [],
+      'right_attack': [],
+    }
+    config.animationSpeed = 0.24;
+    config.overlapX = 10;
+    config.overlapY = 26,
     super(config);
 
     // movements
@@ -43,6 +61,11 @@ class Player extends AnimationSprites {
     this.energy = this.stats['energy'];
     this.speed = this.stats['speed'];
     this.exp = 110;
+  }
+
+  addCoordinates(x, y) {
+    this.x = x;
+    this.y = y;
   }
 
   addCollision(obstacleSprites) {
@@ -167,55 +190,6 @@ class Player extends AnimationSprites {
 
   afterAttackCooldown() {
     this.canAttack = true;
-  }
-
-  move() {
-    this.hitbox.top += this.direction.y * this.speed;
-    this.hitbox.bottom += this.direction.y * this.speed;
-    this.collision('vertical')
-
-    this.hitbox.left += this.direction.x * this.speed;
-    this.hitbox.right += this.direction.x * this.speed;
-    this.collision('horizontal')
-
-    let { x, y, width, height } = this.hitbox.deflate(this.overlapX, this.overlapY);
-    this.rect.update(x, y, width, height);
-    this.x = this.rect.x;
-    this.y = this.rect.y;
-  }
-  
-  collision(verb) {
-    if (verb === 'horizontal') {
-      for (let spriteIndex in this.obstacleSprites) {
-        let sprite = this.obstacleSprites[spriteIndex];
-        if (sprite.rect.collideRect(this.hitbox) === true) {
-          if (this.direction.x > 0) {
-            this.hitbox.right = sprite.rect.left;
-            this.hitbox.left = this.hitbox.right - this.hitbox.width;
-          }
-          if (this.direction.x < 0) {
-            this.hitbox.left = sprite.rect.right;
-            this.hitbox.right = this.hitbox.left + this.hitbox.width;
-          }
-        }
-      }
-    }
-
-    if (verb === 'vertical') {
-      for (let spriteIndex in this.obstacleSprites) {
-        let sprite = this.obstacleSprites[spriteIndex];
-        if (sprite.rect.collideRect(this.hitbox) === true) {
-          if (this.direction.y > 0) {
-            this.hitbox.bottom = sprite.rect.top;
-            this.hitbox.top = this.hitbox.bottom - this.hitbox.height;
-          }
-          if (this.direction.y < 0) {
-            this.hitbox.top = sprite.rect.bottom;
-            this.hitbox.bottom = this.hitbox.top + this.hitbox.height;
-          }
-        }
-      }
-    }
   }
 
   update(state) {

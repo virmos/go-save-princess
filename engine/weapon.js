@@ -1,8 +1,9 @@
-class Weapon extends Sprites {
+class Weapon extends Sprite {
   constructor(config) {
     config.x = config.player.x;
     config.y = config.player.y;
     config.src = `graphics/weapons/${config.player.weaponType}/${config.player.weaponDirection}.png`;
+    config.spriteType = 'weapon';
     super(config);
 
     this.player = config.player;

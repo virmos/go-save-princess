@@ -141,8 +141,6 @@ class Enemy extends Entity {
       this.ctx.drawImage(this.image, this.x, this.y);
       this.ctx.globalAlpha = 1.0;
 
-      this.image.className = 'object-flickering';
-
       if (this.health <= 0)
         this.delete();
       setTimeout(this.invincibleCooldown.bind(this), this.invincibleTimeout);

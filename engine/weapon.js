@@ -1,12 +1,10 @@
 class Weapon extends Sprite {
-  constructor(config) {
+  constructor(config, groups) {
     config.x = config.player.x;
     config.y = config.player.y;
     config.src = `graphics/weapons/${config.player.weaponType}/${config.player.weaponDirection}.png`;
     config.spriteType = 'weapon';
-    super(config);
-
-    this.player = config.player;
+    super(config, groups);
   }
 
   createDefaultHitbox() {
@@ -37,12 +35,9 @@ class Weapon extends Sprite {
     this.init();
   }
 
-  init() {  }
-
-  delete() {
-    this.image = null;
-    this.rect = null;
-  }
+  init() { 
+    this.groups.forEach(group => group.push(this));
+   }
 
   update(state) {  }
 }

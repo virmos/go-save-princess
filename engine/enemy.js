@@ -1,5 +1,6 @@
 class Enemy extends Entity {
-  constructor(config) {
+  constructor(config, groups, obstacleSprites) {
+    // setup the animations
     config.animations = {
       'idle': [],
       'move': [],
@@ -27,24 +28,107 @@ class Enemy extends Entity {
     }
 
     config.overlapX = 0;
-    config.overlapY = 0;
+    config.overlapY = 26;
     config.animationSpeed = 0.1;
 
-    super(config);
+    super(config, groups, obstacleSprites);
 
+    // movements
     this.direction = new Vector2D(0, 0);
+    this.updatedDirection = new Vector2D(0, 0);
     this.status = 'idle';
+
+    // stats  
+    let monsterInfo = monster_data[this.spriteType];
+    this.health = monsterInfo['health'];
+    this.exp = monsterInfo['exp'];
+    this.speed = monsterInfo['speed'];
+    this.damage = monsterInfo['damage'];
+    this.attackRadius = monsterInfo['attack_radius'];
+    this.noticeRadius = monsterInfo['notice_radius'];
+    this.attackType = monsterInfo['attack_type'];
+    this.attackCooldownTimeout = monsterInfo['attack_cooldown'];
+
+    // states
+    this.canAttack = true;
+    this.isAttacking = false;
+  }
+
+  calculateMovementVector() {
+    let playerVecX = this.player.centerX;
+    let playerVecY = this.player.centerY;
+
+    let monsterVecX = this.centerX;
+    let monsterVecY = this.centerY;
+
+    let directionVecX = playerVecX - monsterVecX;
+    let directionVecY = playerVecY - monsterVecY;
+    
+    let squareDistance =  directionVecX * directionVecX + directionVecY * directionVecY;
+    let distance = Math.sqrt(squareDistance)
+    
+    this.updatedDirection.x = directionVecX;
+    this.updatedDirection.y = directionVecY;
+    this.updatedDirection.normalize();
+    
+    return distance;
+  }
+
+  getStatus() {
+    let distance = this.calculateMovementVector();
+
+    if (!this.isAttacking) {
+      this.status = 'idle';
+      if (distance <= this.attackRadius && this.canAttack) {
+        this.status = 'attack';
+      } else if (distance > this.attackRadius && distance <= this.noticeRadius) {
+        this.status = 'move';
+      }
+    }
+  }
+
+  action() {
+    this.direction.x = 0;
+    this.direction.y = 0;
+    if (this.status === 'attack') {
+      if (!this.isAttacking) {
+        this.animationIndex = 0;
+        this.isAttacking = true;
+      }
+    } else if (this.status === 'move') {
+      this.direction.x = this.updatedDirection.x;
+      this.direction.y = this.updatedDirection.y;
+    } else if (this.status === 'idle') {
+
+    }
   }
 
   animate() {
     let animation = this.animations[this.status];
     this.animationIndex += this.animationSpeed;
-    if (this.animationIndex >= animation.length)
+    if (this.animationIndex >= animation.length) {
       this.animationIndex = 0;
+      if (this.status === 'attack') {
+        this.canAttack = false;
+        this.isAttacking = false;
+        setTimeout(this.attackCooldown.bind(this), this.attackCooldownTimeout);
+      }
+    }
     this.image = animation[parseInt(this.animationIndex)];   
   }
 
+  attackCooldown() {
+    this.canAttack = true;
+  }
+
+  collideSprite(other) {
+    return this.rect.collideRect(other.rect);
+  }
+
   update() {
+    this.getStatus();
+    this.action();
+    this.move();
     this.animate();
   }
 }

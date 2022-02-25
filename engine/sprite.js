@@ -1,5 +1,5 @@
 class Sprite {
-  constructor(config) {
+  constructor(config, groups) {
     //Set up the image
     this.ctx = config.ctx;
     this.spriteType = config.spriteType;
@@ -8,6 +8,7 @@ class Sprite {
     this.x = config.x;
     this.y = config.y;
     this.player = config.player;
+    this.groups = groups;
 
     this.loadDefaultSprite();
   }
@@ -20,15 +21,36 @@ class Sprite {
 
   createDefaultHitbox() {
     let imageOffsetY = this.spriteType === 'object' ? TILE_SIZE : 0; // can replace TILE_SIZE = this.image.height / 2
-      
-    this.rect = new Rect(this.x, this.y - imageOffsetY, this.image.width, this.image.height);
+    this.y = this.y - imageOffsetY;
+    this.rect = new Rect(this.x, this.y, this.image.width, this.image.height);
 
     this.init();
   }
 
+  collideSprite(other) {
+    return this.rect.collideRect(other.rect);
+  }
+
   init() {
     SPRITE_COUNTER += 1;
+    this.groups.forEach(group => group.push(this));
   };
+
+  delete() {
+    this.rect = null;
+    this.image = null;
+    this.collect();
+  }
+
+  collect() {
+    this.groups.forEach(group => {
+      for (let index in group) {
+        if (!group[index].rect) {
+          group.splice(index, 1);
+        }
+      }
+    })
+  }
 
   draw() {
     if (this.spriteType === 'invisible' || !this.rect) // if invisible sprite or sprite is not loaded

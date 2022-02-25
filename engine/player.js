@@ -1,5 +1,5 @@
 class Player extends Entity {
-  constructor(config, createWeapon, destroyWeapon, createMagic, destroyMagic) {
+  constructor(config, groups, obstacleSprites, createWeapon, destroyWeapon, createMagic, destroyMagic) {
     //Set up the image
     config.spriteType = 'player';
     config.src = `graphics/${config.spriteType}/down/down_0.png`;
@@ -22,7 +22,7 @@ class Player extends Entity {
     config.animationSpeed = 0.24;
     config.overlapX = 10;
     config.overlapY = 26,
-    super(config);
+    super(config, groups, obstacleSprites);
 
     // movements
     this.direction = new Vector2D(0, 0);
@@ -63,15 +63,6 @@ class Player extends Entity {
     this.exp = 110;
   }
 
-  addCoordinates(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  addCollision(obstacleSprites) {
-    this.obstacleSprites = obstacleSprites;
-  }
-
   input(arrow) {
     if (this.isAttacking) {
       arrow = null;
@@ -98,9 +89,7 @@ class Player extends Entity {
       this.status = 'right';
     } 
     
-    if (this.direction.magnitude() != 0) {
-      this.direction.normalize();
-    }
+    this.direction.normalize();
 
     if (arrow ===  'enter'&& this.canAttack) {
       this.weaponDirection = this.status.split('_')[0];
@@ -195,7 +184,7 @@ class Player extends Entity {
   update(state) {
     this.input(state.arrow);
     this.getStatus();
-    this.animate();
     this.move();
+    this.animate();
   }
 }

@@ -1,5 +1,5 @@
 class Entity {
-  constructor(config) {
+  constructor(config, groups, obstacleSprites) {
     // setup the default image
     this.image = new Image();
     this.ctx = config.ctx;
@@ -11,6 +11,8 @@ class Entity {
     // setup the coordinates
     this.x = config.x;
     this.y = config.y;
+    this.centerX = null;
+    this.centerY = null;
 
     // setup animation images
     this.animationSprites = config.animationSprites;
@@ -29,6 +31,8 @@ class Entity {
       this.player = this;
     else 
       this.player = config.player;
+    this.groups = groups;
+    this.obstacleSprites = obstacleSprites;
 
     // setup stats
     this.speed = 5;
@@ -43,9 +47,9 @@ class Entity {
   createDefaultHitbox() {
     this.localSpriteCounter += 1;
 
-    let imageOffsetY = this.spriteType === 'raccoon' ? this.image.height / 2 : 0;
-    this.rect = new Rect(this.x, this.y - imageOffsetY, this.image.width, this.image.height);
-
+    this.centerX = this.x + this.image.width / 2;
+    this.centerY = this.y + this.image.height / 2;
+    this.rect = new Rect(this.x, this.y, this.image.width, this.image.height);
     let { x, y, width, height } = this.rect.inflate(this.overlapX, this.overlapY);
     this.hitbox = new Rect(x, y, width, height);
   }
@@ -69,9 +73,31 @@ class Entity {
     }
   }
 
+  addCoordinates(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
   init() {
     SPRITE_COUNTER += 1;
+    this.groups.forEach(group => group.push(this));
   };
+
+  delete() {
+    this.rect = null;
+    this.image = null;
+    this.collect();
+  }
+
+  collect() {
+    this.groups.forEach(group => {
+      for (let index in group) {
+        if (!group[index].rect) {
+          group.splice(index, 1);
+        }
+      }
+    })
+  }
 
   move() {
     this.hitbox.top += this.direction.y * this.speed;
@@ -86,6 +112,8 @@ class Entity {
     this.rect.update(x, y, width, height);
     this.x = this.rect.x;
     this.y = this.rect.y;
+    this.centerX = this.x + this.image.width / 2;
+    this.centerY = this.y + this.image.height / 2;
   }
   
   collision(verb) {

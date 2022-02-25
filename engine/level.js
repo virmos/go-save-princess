@@ -8,8 +8,11 @@ class Level {
     this.player = null;
     this.weapon = null;
     this.mapSprite = null;
+
     this.visibleSprites = [];
     this.obstacleSprites = [];
+    this.attackableSprites = [];
+    this.attackSprites = [];
     this.allSprites = [];
   }
 
@@ -34,6 +37,7 @@ class Level {
     }
 
     this.player = new Player({ x:0, y:0, ctx:this.ctx }, 
+      [this.visibleSprites, this.allSprites], this.obstacleSprites,
       this.createWeapon.bind(this), this.destroyWeapon.bind(this), 
       this.createMagic.bind(this), this.destroyMagic.bind(this));
 
@@ -45,15 +49,21 @@ class Level {
             let x = colIndex * TILE_SIZE;
             let y = rowIndex * TILE_SIZE;
             if (style === 'boundaries') {
-              this.obstacleSprites.push(new Sprite({ x:x, y:y, src:"graphics/test/player.png", spriteType:'invisible', player:this.player, ctx:this.ctx }));
+              let boundary = new Sprite(
+                { x:x, y:y, src:"graphics/test/player.png", spriteType:'invisible', player:this.player, ctx:this.ctx },
+                [this.obstacleSprites, this.allSprites]);
             }
             if (style === 'grasses') {
               let randomGrassIndex = Math.floor(Math.random() * 3) + 1;
-              this.obstacleSprites.push(new Sprite({ x:x, y:y, src:`graphics/grass/grass_${randomGrassIndex}.png`, spriteType:'grass', player:this.player, ctx:this.ctx }));
+              let grass = new Sprite(
+                  { x:x, y:y, src:`graphics/grass/grass_${randomGrassIndex}.png`, spriteType:'grass', player:this.player, ctx:this.ctx }
+                  , [this.obstacleSprites, this.attackableSprites, this.allSprites]);
             }
             if (style === 'objects') {
               let objectIndex = twoDigitNumber.format(row[colIndex]);
-              this.obstacleSprites.push(new Sprite({ x:x, y:y, src:`graphics/objects/${objectIndex}.png`, spriteType:'object', player:this.player, ctx:this.ctx }));
+              let object = new Sprite(
+                { x:x, y:y, src:`graphics/objects/${objectIndex}.png`, spriteType:'object', player:this.player, ctx:this.ctx },
+                [this.obstacleSprites, this.allSprites]);
             }
             if (style === 'entities') {
               if (row[colIndex] === '394') {
@@ -64,24 +74,22 @@ class Level {
                 else if (row[colIndex] === '391') { monsterName = 'spirit' }
                 else if (row[colIndex] === '392') { monsterName = 'raccoon' }
                 
-                this.visibleSprites.push(new Enemy({ x:x, y:y, spriteType:monsterName, player:this.player, ctx:this.ctx}))
+                let enemy = new Enemy(
+                  { x:x, y:y, spriteType:monsterName, player:this.player, ctx:this.ctx}
+                  , [this.visibleSprites, this.attackableSprites, this.allSprites], this.obstacleSprites);
               }
             }
           }
         }
       }
     }
-
-    this.player.addCollision(this.obstacleSprites);
-    this.visibleSprites.push(this.player);
-    this.allSprites = this.obstacleSprites.concat(this.visibleSprites);
     this.mapSprite = new Map({ src: this.src, player:this.player, ctx: this.ctx });
   }
 
   createMagic(player) {
-    this.magic = new Magic({ player:player, ctx: this.ctx});
-    this.visibleSprites.push(this.magic);
-    this.allSprites.push(this.magic);
+    this.magic = new Magic(
+      { player:player, ctx: this.ctx},
+      [this.visibleSprites, this.allSprites]);
   }
 
   destroyMagic() {
@@ -90,9 +98,9 @@ class Level {
   }
 
   createWeapon(player) {
-    this.weapon = new Weapon({ player:player, ctx: this.ctx});
-    this.visibleSprites.push(this.weapon);
-    this.allSprites.push(this.weapon);
+    this.weapon = new Weapon(
+      { player:player, ctx: this.ctx},
+      [this.visibleSprites, this.attackSprites, this.allSprites]);
   }
 
   destroyWeapon() {
@@ -100,16 +108,32 @@ class Level {
     this.weapon.delete();
   }
 
+  playerAttackLogic() {
+    if (this.attackSprites.length !== 0) {
+      for (let index in this.attackSprites) {
+        let attackSprite = this.attackSprites[index];
+        let currentRect = attackSprite.rect;
+        let cachedRect = new Rect(currentRect.x, currentRect.y, currentRect.width, currentRect.height); // weapon will be deleted
+        
+        this.attackableSprites.forEach(attackableSprite => {
+          if (attackableSprite.rect.collideRect(cachedRect)) {
+            attackableSprite.delete();
+          }
+        }, this)
+      }
+    }
+  }
+
   update() {
     // update
     this.visibleSprites.forEach(element => element.update({ arrow: this.input.getDirection() }));
     let sortedAllSprites = this.allSprites.sort(function(a, b){ return (a.rect && b.rect) ? (a.rect.top - b.rect.top) : -1; })
+    this.playerAttackLogic();
     this.ui.update();
-
+    
     // draw
     this.mapSprite.draw();
     sortedAllSprites.forEach(element => element.draw());
     this.ui.draw()
-    
   }
 }

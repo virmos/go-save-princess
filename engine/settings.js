@@ -58,10 +58,10 @@ magic_data = {
 
 // enemy
 monster_data = {
-  'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
-  'raccoon': {'health': 300,'exp':250,'damage':40,'attack_type': 'claw',  'attack_sound':'../audio/attack/claw.wav','speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
-  'spirit': {'health': 100,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'../audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
-  'bamboo': {'health': 70,'exp':120,'damage':6,'attack_type': 'leaf_attack', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
+  'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
+  'raccoon': {'health': 300,'exp':250,'damage':40,'attack_type': 'claw',  'attack_sound':'../audio/attack/claw.wav','speed': 2, 'attack_cooldown': 1000, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
+  'spirit': {'health': 100,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'../audio/attack/fireball.wav', 'speed': 4, 'attack_cooldown': 3000 ,'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
+  'bamboo': {'health': 70,'exp':120,'damage':6,'attack_type': 'leaf_attack', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
 
 player_animation_sprites = {
   'up': ['graphics/player/up/up_0.png', 'graphics/player/up/up_1.png', 'graphics/player/up/up_2.png', 'graphics/player/up/up_3.png'], 

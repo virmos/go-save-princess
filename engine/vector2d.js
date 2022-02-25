@@ -4,16 +4,10 @@ class Vector2D {
     this.y = y;
   }
 
-  magnitude() {
-    if (this.x * this.x + this.y * this.y >= 2) {
-      return true;
-    }
-    return false;
-  }
-
   normalize() {
-    if (this.y !== 0) {
-      let root = Math.sqrt((this.x * this.x + this.y * this.y));
+    let square = this.x * this.x + this.y * this.y;
+    if (square >= 2) {
+      let root = Math.sqrt(square);
       this.x = this.x * 1.0 / root;
       this.y = this.y * 1.0 / root;
     }

@@ -1,7 +1,9 @@
 class Map extends Sprite {
   constructor(config) {
     config.spriteType = 'map';
-    super(config);
+    config.x = 0;
+    config.y = 0;
+    super(config, null);
   }
 
   createDefaultHitbox() { this.init(); }
@@ -9,11 +11,11 @@ class Map extends Sprite {
   init() { this.isLoaded = true; }
 
   draw() {
-    let offsetX = (this.player.rect.x + TILE_SIZE / 2) - SCREEN_WIDTH / 2;  // player.rect.left, top + 32 to calculate center of player
-    let offsetY = (this.player.rect.y + TILE_SIZE / 2) - SCREEN_HEIGHT / 2;  // 
+    let offsetX = (this.player.x + TILE_SIZE / 2) - SCREEN_WIDTH / 2;   // during loading, 
+    let offsetY = (this.player.y + TILE_SIZE / 2) - SCREEN_HEIGHT / 2;  // player.rect null
 
     this.isLoaded && this.ctx.drawImage(this.image,
-      0,0,
+      this.x, this.y,
       MAP_WIDTH,MAP_HEIGHT,
       -offsetX, -offsetY,
       MAP_WIDTH,MAP_HEIGHT,

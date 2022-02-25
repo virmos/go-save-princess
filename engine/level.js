@@ -117,7 +117,11 @@ class Level {
         
         this.attackableSprites.forEach(attackableSprite => {
           if (attackableSprite.rect.collideRect(cachedRect)) {
-            attackableSprite.delete();
+            if (attackableSprite.spriteType === 'grass') {
+              attackableSprite.delete();
+            } else {
+              attackableSprite.takeDamage();
+            }
           }
         }, this)
       }

@@ -27,14 +27,11 @@ class Player extends Entity {
     // movements
     this.direction = new Vector2D(0, 0);
     this.status = 'down';
-    this.isAttacking = false;
-    this.canAttack = true;
-    this.attackCooldownTimeout = 400;
 
     // weapons
     this.weaponIndex = 2;
     this.weaponType = Object.keys(weapon_data)[this.weaponIndex];
-    this.afterAttackCooldownTimeout = weapon_data[this.weaponType]['cooldown'];
+    this.weaponCooldownTimeout = weapon_data[this.weaponType]['cooldown'];
     this.weaponDirection = 'down';
     this.createWeapon = createWeapon;
     this.destroyWeapon = destroyWeapon;
@@ -57,10 +54,16 @@ class Player extends Entity {
 
     // stats
     this.stats = {'health': 100, 'energy': 60, 'attack': 10, 'magic': 4, 'speed': 5};
+    this.attackDamage = this.stats['attack'];
     this.health = this.stats['health'];
     this.energy = this.stats['energy'];
     this.speed = this.stats['speed'];
     this.exp = 110;
+
+    // states
+    this.isAttacking = false;
+    this.canAttack = true;
+    this.attackCooldownTimeout = 200;
   }
 
   input(arrow) {
@@ -96,6 +99,7 @@ class Player extends Entity {
       this.isAttacking = true;
       this.canAttack = false;
       this.createWeapon(this);
+      
       setTimeout(this.attackWeaponCooldown.bind(this), this.attackCooldownTimeout);
     }
 
@@ -112,7 +116,7 @@ class Player extends Entity {
         let weaponArray = Object.keys(weapon_data);
         this.weaponIndex = (this.weaponIndex >= weaponArray.length - 1) ? 0 : this.weaponIndex + 1;
         this.weaponType = weaponArray[this.weaponIndex];
-        this.afterAttackCooldownTimeout = weapon_data[this.weaponType]['cooldown'];
+        this.weaponCooldownTimeout = weapon_data[this.weaponType]['cooldown'];
         setTimeout(this.switchWeaponCooldown.bind(this), this.switchWeaponCooldownTimeout);
       }
       this.canSwitchWeapon = false;
@@ -168,7 +172,7 @@ class Player extends Entity {
   attackWeaponCooldown() {
     this.isAttacking = false;
     this.destroyWeapon();
-    setTimeout(this.afterAttackCooldown.bind(this), this.afterAttackCooldownTimeout);
+    setTimeout(this.afterAttackCooldown.bind(this), this.afterAttackCooldownTimeout + this.weaponCooldownTimeout);
   }
 
   attackMagicCooldown() {
@@ -179,6 +183,11 @@ class Player extends Entity {
 
   afterAttackCooldown() {
     this.canAttack = true;
+  }
+
+  getFullWeaponDamage() {
+    let weaponDamage = weapon_data[this.weaponType]['damage'];
+    return this.attackDamage + weaponDamage;
   }
 
   update(state) {

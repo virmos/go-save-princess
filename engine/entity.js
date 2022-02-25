@@ -73,32 +73,6 @@ class Entity {
     }
   }
 
-  addCoordinates(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  init() {
-    SPRITE_COUNTER += 1;
-    this.groups.forEach(group => group.push(this));
-  };
-
-  delete() {
-    this.rect = null;
-    this.image = null;
-    this.collect();
-  }
-
-  collect() {
-    this.groups.forEach(group => {
-      for (let index in group) {
-        if (!group[index].rect) {
-          group.splice(index, 1);
-        }
-      }
-    })
-  }
-
   move() {
     this.hitbox.top += this.direction.y * this.speed;
     this.hitbox.bottom += this.direction.y * this.speed;
@@ -148,6 +122,32 @@ class Entity {
         }
       }
     }
+  }
+
+  addCoordinates(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  init() {
+    SPRITE_COUNTER += 1;
+    this.groups.forEach(group => group.push(this));
+  };
+
+  delete() {
+    this.rect = null;
+    this.image = null;
+    this.collect();
+  }
+
+  collect() {
+    this.groups.forEach(group => {
+      for (let index in group) {
+        if (!group[index].rect) {
+          group.splice(index, 1);
+        }
+      }
+    })
   }
 
   draw() {

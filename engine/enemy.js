@@ -48,10 +48,13 @@ class Enemy extends Entity {
     this.noticeRadius = monsterInfo['notice_radius'];
     this.attackType = monsterInfo['attack_type'];
     this.attackCooldownTimeout = monsterInfo['attack_cooldown'];
+    this.invincibleTimeout = 200;
 
     // states
     this.canAttack = true;
     this.isAttacking = false;
+
+    this.canBeAttacked = true;
   }
 
   calculateMovementVector() {
@@ -114,15 +117,36 @@ class Enemy extends Entity {
         setTimeout(this.attackCooldown.bind(this), this.attackCooldownTimeout);
       }
     }
-    this.image = animation[parseInt(this.animationIndex)];   
+    this.image = animation[parseInt(0)];   
   }
 
   attackCooldown() {
     this.canAttack = true;
+  } 
+  
+  invincibleCooldown() {
+    this.canBeAttacked = true;
   }
 
   collideSprite(other) {
     return this.rect.collideRect(other.rect);
+  }
+
+  takeDamage() {
+    if (this.canBeAttacked) {
+      this.canBeAttacked = false;
+      this.health -= this.player.getFullWeaponDamage();
+
+      this.ctx.globalAlpha = 0.5;
+      this.ctx.drawImage(this.image, this.x, this.y);
+      this.ctx.globalAlpha = 1.0;
+
+      this.image.className = 'object-flickering';
+
+      if (this.health <= 0)
+        this.delete();
+      setTimeout(this.invincibleCooldown.bind(this), this.invincibleTimeout);
+    }
   }
 
   update() {

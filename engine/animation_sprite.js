@@ -1,8 +1,9 @@
-class Entity {
+class AnimationSprite {
   constructor(config, groups, obstacleSprites) {
     // setup the default image
     this.image = new Image();
     this.ctx = config.ctx;
+    this.globalAlpha = 1.0;
     this.src = config.src;
     this.spriteType = config.spriteType;
     this.overlapX = config.overlapX;
@@ -151,9 +152,10 @@ class Entity {
   }
 
   draw() {
-    if (this.spriteType === 'invisible' || !this.rect) // if invisible sprite or sprite is not loaded
+    if (!this.rect) // if invisible sprite or sprite is not loaded
       return;
-    
+    this.ctx.globalAlpha = this.globalAlpha;
+
     let offsetX = (this.player.rect.x + TILE_SIZE / 2) - SCREEN_WIDTH / 2;  // player.rect.left, top + TILE_SIZE / 2 to calculate center of player
     let offsetY = (this.player.rect.y + TILE_SIZE / 2) - SCREEN_HEIGHT / 2;  // 
     this.ctx.drawImage(this.image,
@@ -162,5 +164,6 @@ class Entity {
       this.rect.x - offsetX, this.rect.y - offsetY,
       this.image.width,this.image.height
     )
+    this.ctx.globalAlpha = 1.0;
   }
 }

@@ -58,10 +58,10 @@ magic_data = {
 
 // enemy
 monster_data = {
-  'squid': {'health': 1000,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
-  'raccoon': {'health': 3000,'exp':250,'damage':60,'attack_type': 'claw',  'attack_sound':'../audio/attack/claw.wav','speed': 2, 'attack_cooldown': 1000, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
-  'spirit': {'health': 1000,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'../audio/attack/fireball.wav', 'speed': 4, 'attack_cooldown': 3000 ,'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
-  'bamboo': {'health': 700,'exp':120,'damage':6,'attack_type': 'leaf_attack', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
+  'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
+  'raccoon': {'health': 1000,'exp':250,'damage':60,'attack_type': 'claw',  'attack_sound':'../audio/attack/claw.wav','speed': 2, 'attack_cooldown': 1000, 'resistance': 1, 'attack_radius': 120, 'notice_radius': 400},
+  'spirit': {'health': 200,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'../audio/attack/fireball.wav', 'speed': 4, 'attack_cooldown': 3000 ,'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
+  'bamboo': {'health': 70,'exp':120,'damage':6,'attack_type': 'leaf_attack', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
 
 player_animation_sprites = {
   'up': ['graphics/player/up/up_0.png', 'graphics/player/up/up_1.png', 'graphics/player/up/up_2.png', 'graphics/player/up/up_3.png'], 
@@ -102,6 +102,10 @@ squid_animation_sprites = {
   'move': ['graphics/monsters/squid/move/0.png', 'graphics/monsters/squid/move/1.png', 'graphics/monsters/squid/move/2.png', 'graphics/monsters/squid/move/3.png']}
 num_squid_animation_sprites = 10;  
   
+leaf = {
+  
+}
+
 map_grasses = [['-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', 
 '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', 
 '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1'], ['-1', 

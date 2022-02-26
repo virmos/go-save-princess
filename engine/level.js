@@ -76,7 +76,9 @@ class Level {
                 
                 let enemy = new Enemy(
                   { x:x, y:y, spriteType:monsterName, player:this.player, ctx:this.ctx}
-                  , [this.visibleSprites, this.attackableSprites, this.allSprites], this.obstacleSprites);
+                  , [this.visibleSprites, this.attackableSprites, this.allSprites], 
+                  this.obstacleSprites
+                  , this.damagePlayerLogic);
               }
             }
           }
@@ -126,6 +128,10 @@ class Level {
         }, this)
       }
     }
+  }
+
+  damagePlayerLogic(player, damage, attackType) {
+    player.health -= damage;
   }
 
   update() {

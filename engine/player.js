@@ -1,4 +1,4 @@
-class Player extends Entity {
+class Player extends AnimationSprite {
   constructor(config, groups, obstacleSprites, createWeapon, destroyWeapon, createMagic, destroyMagic) {
     //Set up the image
     config.spriteType = 'player';
@@ -23,6 +23,7 @@ class Player extends Entity {
     config.overlapX = 10;
     config.overlapY = 26,
     super(config, groups, obstacleSprites);
+    this.animationIndex = 0;
 
     // movements
     this.direction = new Vector2D(0, 0);
@@ -64,6 +65,9 @@ class Player extends Entity {
     this.isAttacking = false;
     this.canAttack = true;
     this.attackCooldownTimeout = 200;
+
+    this.invincibleTimeout = 500;
+    this.canBeAttacked = true;
   }
 
   input(arrow) {
@@ -188,6 +192,24 @@ class Player extends Entity {
   getFullWeaponDamage() {
     let weaponDamage = weapon_data[this.weaponType]['damage'];
     return this.attackDamage + weaponDamage;
+  }
+  
+  invincibleCooldown() {
+    this.canBeAttacked = true;
+    this.globalAlpha = 1.0;
+  }
+
+  takeDamage() {
+    if (this.canBeAttacked) {
+      this.canBeAttacked = false;
+
+      if (this.health <= 0) {
+        this.delete();
+      }
+
+      this.globalAlpha = 0.3;
+      setTimeout(this.invincibleCooldown.bind(this), this.invincibleTimeout);
+    }
   }
 
   update(state) {

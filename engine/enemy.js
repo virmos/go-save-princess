@@ -1,5 +1,5 @@
-class Enemy extends Entity {
-  constructor(config, groups, obstacleSprites) {
+class Enemy extends AnimationSprite {
+  constructor(config, groups, obstacleSprites, damagePlayerLogic) {
     // setup the animations
     config.animations = {
       'idle': [],
@@ -32,6 +32,8 @@ class Enemy extends Entity {
     config.animationSpeed = 0.1;
 
     super(config, groups, obstacleSprites);
+    // functions
+    this.damagePlayerLogic = damagePlayerLogic;
 
     // movements
     this.direction = new Vector2D(0, 0);
@@ -41,6 +43,7 @@ class Enemy extends Entity {
     // stats  
     let monsterInfo = monster_data[this.spriteType];
     this.health = monsterInfo['health'];
+    this.resistance = monsterInfo['resistance'];
     this.exp = monsterInfo['exp'];
     this.speed = monsterInfo['speed'];
     this.damage = monsterInfo['damage'];
@@ -48,7 +51,7 @@ class Enemy extends Entity {
     this.noticeRadius = monsterInfo['notice_radius'];
     this.attackType = monsterInfo['attack_type'];
     this.attackCooldownTimeout = monsterInfo['attack_cooldown'];
-    this.invincibleTimeout = 200;
+    this.invincibleTimeout = 200; // base cooldown + rapier cooldown
 
     // states
     this.canAttack = true;
@@ -79,6 +82,10 @@ class Enemy extends Entity {
 
   getStatus() {
     let distance = this.calculateMovementVector();
+    if (!this.canBeAttacked) {
+      this.updatedDirection.x *= -this.resistance;
+      this.updatedDirection.y *= -this.resistance;
+    }
 
     if (!this.isAttacking) {
       this.status = 'idle';
@@ -97,13 +104,13 @@ class Enemy extends Entity {
       if (!this.isAttacking) {
         this.animationIndex = 0;
         this.isAttacking = true;
+        this.damagePlayerLogic(this.player, this.damage, this.attackType);
+        this.player.takeDamage();
       }
     } else if (this.status === 'move') {
       this.direction.x = this.updatedDirection.x;
       this.direction.y = this.updatedDirection.y;
-    } else if (this.status === 'idle') {
-
-    }
+    } 
   }
 
   animate() {
@@ -117,7 +124,7 @@ class Enemy extends Entity {
         setTimeout(this.attackCooldown.bind(this), this.attackCooldownTimeout);
       }
     }
-    this.image = animation[parseInt(0)];   
+    this.image = animation[parseInt(this.animationIndex)];   
   }
 
   attackCooldown() {
@@ -126,6 +133,7 @@ class Enemy extends Entity {
   
   invincibleCooldown() {
     this.canBeAttacked = true;
+    this.globalAlpha = 1.0;
   }
 
   collideSprite(other) {
@@ -137,12 +145,11 @@ class Enemy extends Entity {
       this.canBeAttacked = false;
       this.health -= this.player.getFullWeaponDamage();
 
-      this.ctx.globalAlpha = 0.5;
-      this.ctx.drawImage(this.image, this.x, this.y);
-      this.ctx.globalAlpha = 1.0;
-
-      if (this.health <= 0)
+      if (this.health <= 0) {
         this.delete();
+      }
+
+      this.globalAlpha = 0.3;
       setTimeout(this.invincibleCooldown.bind(this), this.invincibleTimeout);
     }
   }

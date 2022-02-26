@@ -102,9 +102,29 @@ squid_animation_sprites = {
   'move': ['graphics/monsters/squid/move/0.png', 'graphics/monsters/squid/move/1.png', 'graphics/monsters/squid/move/2.png', 'graphics/monsters/squid/move/3.png']}
 num_squid_animation_sprites = 10;  
   
-leaf = {
-  
+particle_effect_sprites = {
+  // magic
+  // 'flame': ['graphics/particles/flame/frames/', 'graphics/particles/flame/frames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/'], 
+  // 'aura': ['graphics/particles/aura/0.png','graphics/particles/aura/1.png', 'graphics/particles/aura/2.png', 'graphics/particles/aura/3.png'],
+  // 'heal':['graphics/particles/frames', 'graphics/particles/frames','graphics/particles/frames', 'graphics/particles/frames', 'graphics/particles/frames'],
+
+  // attacks
+  'claw': ['graphics/particles/claw/0.png', 'graphics/particles/claw/1.png', 'graphics/particles/claw/2.png', 'graphics/particles/claw/3.png'], 
+  'slash': ['graphics/particles/slash/0.png', 'graphics/particles/slash/1.png', 'graphics/particles/slash/2.png','graphics/particles/slash/3.png'],
+  'leaf_attack': ['graphics/particles/leaf_attack/0.png', 'graphics/particles/leaf_attack/1.png', 'graphics/particles/leaf_attack/2.png', 'graphics/particles/leaf_attack/3.png', 'graphics/particles/leaf_attack/4.png', 'graphics/particles/leaf_attack/5.png', 'graphics/particles/leaf_attack/6.png'],
+  'sparkle': ['graphics/particles/sparkle/0.png', 'graphics/particles/sparkle/1.png', 'graphics/particles/sparkle/2.png', 'graphics/particles/sparkle/3.png' ,'graphics/particles/sparkle/4.png'],
+  'thunder': ['graphics/particles/thunder/0.png', 'graphics/particles/thunder/1.png', 'graphics/particles/thunder/2.png', 'graphics/particles/thunder/3.png', 'graphics/particles/thunder/4.png', 'graphics/particles/thunder/5.png', 'graphics/particles/thunder/6.png', 'graphics/particles/thunder/7.png'],
+
+  // monsters deaths
+  'squid': ['graphics/particles/smoke_orange/0.png', 'graphics/particles/smoke_orange/1.png', 'graphics/particles/smoke_orange/2.png', 'graphics/particles/smoke_orange/3.png', 'graphics/particles/smoke_orange/4.png', 'graphics/particles/smoke_orange/5.png'],
+  'raccoon': ['graphics/particles/raccoon/0.png', 'graphics/particles/raccoon/1.png', 'graphics/particles/raccoon/2.png', 'graphics/particles/raccoon/3.png', 'graphics/particles/raccoon/4.png', 'graphics/particles/raccoon/5.png'],
+  'bamboo': ['graphics/particles/bamboo/0.png', 'graphics/particles/bamboo/1.png'], 
+  'spirit': ['graphics/particles/nova/0.png', 'graphics/particles/nova/1.png', 'graphics/particles/nova/2.png', 'graphics/particles/nova/3.png', 'graphics/particles/nova/4.png', 'graphics/particles/nova/5.png'],
+
+  // leafs
+  'leaf': ['graphics/particles/leaf/leaf1_00000.png', 'graphics/particles/leaf/leaf1_00001.png', 'graphics/particles/leaf/leaf1_00002.png', 'graphics/particles/leaf/leaf1_00003.png', 'graphics/particles/leaf/leaf1_00004.png', 'graphics/particles/leaf/leaf1_00005.png', 'graphics/particles/leaf/leaf1_00006.png', 'graphics/particles/leaf/leaf1_00007.png', 'graphics/particles/leaf/leaf1_00008.png', 'graphics/particles/leaf/leaf1_00009.png', 'graphics/particles/leaf/leaf1_00010.png', 'graphics/particles/leaf/leaf1_00011.png'], 
 }
+num_particle_effect_sprites = 61;
 
 map_grasses = [['-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', 
 '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', 

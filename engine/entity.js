@@ -1,43 +1,7 @@
-class AnimationSprite {
+class Entity extends Sprite {
   constructor(config, groups, obstacleSprites) {
-    // setup the default image
-    this.image = new Image();
-    this.ctx = config.ctx;
-    this.globalAlpha = 1.0;
-    this.src = config.src;
-    this.spriteType = config.spriteType;
-    this.overlapX = config.overlapX;
-    this.overlapY = config.overlapY;
-
-    // setup the coordinates
-    this.x = config.x;
-    this.y = config.y;
-    this.centerX = null;
-    this.centerY = null;
-
-    // setup animation images
-    this.animationSprites = config.animationSprites;
-    this.totalLocalSprites = config.totalAnimationSprites + 1; // for default sprite
-
-    this.localSpriteCounter = 0;
-    this.animationSpeed = config.animationSpeed;
-    this.animationIndex = 0;
-
-    this.animations = config.animations;
-    this.loadDefaultSprite();
-    this.loadAnimationSprites();
-
-    // setup player (for draw function)
-    if (this.spriteType === 'player')
-      this.player = this;
-    else 
-      this.player = config.player;
-    this.groups = groups;
-    this.obstacleSprites = obstacleSprites;
-
-    // setup stats
-    this.speed = 5;
-
+   super(config, groups, obstacleSprites);
+   this.loadAnimationSprites();
   }
 
   loadDefaultSprite() {
@@ -61,12 +25,12 @@ class AnimationSprite {
       for (let sourceIndex in animationSources) {
         let animationImage = new Image();
         animationImage.src = animationSources[sourceIndex];
-        animationImage.onload = this.createAnimationHitbox.bind(caller, animationName, animationImage);
+        animationImage.onload = this.finishLoadingAnimationSprites.bind(caller, animationName, animationImage);
       }
     }
   }
 
-  createAnimationHitbox(animationName, animationImage) {
+  finishLoadingAnimationSprites(animationName, animationImage) {
     this.animations[animationName].push(animationImage);
     this.localSpriteCounter += 1;
     if (this.localSpriteCounter === this.totalLocalSprites) {
@@ -128,27 +92,6 @@ class AnimationSprite {
   addCoordinates(x, y) {
     this.x = x;
     this.y = y;
-  }
-
-  init() {
-    SPRITE_COUNTER += 1;
-    this.groups.forEach(group => group.push(this));
-  };
-
-  delete() {
-    this.rect = null;
-    this.image = null;
-    this.collect();
-  }
-
-  collect() {
-    this.groups.forEach(group => {
-      for (let index in group) {
-        if (!group[index].rect) {
-          group.splice(index, 1);
-        }
-      }
-    })
   }
 
   draw() {

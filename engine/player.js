@@ -1,4 +1,4 @@
-class Player extends AnimationSprite {
+class Player extends Entity {
   constructor(config, groups, obstacleSprites, createWeapon, destroyWeapon, createMagic, destroyMagic) {
     //Set up the image
     config.spriteType = 'player';

@@ -1,20 +1,41 @@
 class Sprite {
-  constructor(config, groups) {
-    //Set up the image
+  constructor(config, groups, obstacleSprites) {
+    // setup the default image
+    this.image = new Image();
     this.ctx = config.ctx;
-    this.spriteType = config.spriteType;
+    this.globalAlpha = 1.0;
     this.src = config.src;
+    this.spriteType = config.spriteType;
+    this.overlapX = config.overlapX;
+    this.overlapY = config.overlapY;
 
+    // setup the coordinates
     this.x = config.x;
     this.y = config.y;
-    this.player = config.player;
-    this.groups = groups;
+    this.centerX = null;
+    this.centerY = null;
 
+    // setup animation images
+    this.animationSprites = config.animationSprites;
+    this.totalLocalSprites = config.totalAnimationSprites + 1; // for default sprite
+
+    this.localSpriteCounter = 0;
+    this.animationSpeed = config.animationSpeed;
+    this.animationIndex = 0;
+
+    this.animations = config.animations;
     this.loadDefaultSprite();
+
+    // setup player (for draw function)
+    if (this.spriteType === 'player')
+      this.player = this;
+    else 
+      this.player = config.player;
+    this.groups = groups;
+    this.obstacleSprites = obstacleSprites;
   }
 
   loadDefaultSprite() {
-    this.image = new Image();
     this.image.src = this.src;
     this.image.onload = this.createDefaultHitbox.bind(this);
   }
@@ -22,6 +43,9 @@ class Sprite {
   createDefaultHitbox() {
     let imageOffsetY = this.spriteType === 'object' ? TILE_SIZE : 0; // can replace TILE_SIZE = this.image.height / 2
     this.y = this.y - imageOffsetY;
+
+    this.centerX = this.x + this.image.width / 2;
+    this.centerY = this.y + this.image.height / 2;
     this.rect = new Rect(this.x, this.y, this.image.width, this.image.height);
 
     this.init();

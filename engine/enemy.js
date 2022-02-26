@@ -1,4 +1,4 @@
-class Enemy extends AnimationSprite {
+class Enemy extends Entity {
   constructor(config, groups, obstacleSprites, damagePlayerLogic) {
     // setup the animations
     config.animations = {

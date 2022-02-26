@@ -40,6 +40,8 @@ class Level {
       [this.visibleSprites, this.allSprites], this.obstacleSprites,
       this.createWeapon.bind(this), this.destroyWeapon.bind(this), 
       this.createMagic.bind(this), this.destroyMagic.bind(this));
+    
+    this.animationPlayer = new AnimationPlayer({ player: this.player, ctx:this.ctx }, [ this.visibleSprites, this.allSprites ]);
 
     for (const [style, layoutMap] of Object.entries(layouts)) {
       for (let rowIndex = 0; rowIndex < layoutMap.length; rowIndex++) {
@@ -49,19 +51,19 @@ class Level {
             let x = colIndex * TILE_SIZE;
             let y = rowIndex * TILE_SIZE;
             if (style === 'boundaries') {
-              let boundary = new Sprite(
+              new Sprite(
                 { x:x, y:y, src:"graphics/test/player.png", spriteType:'invisible', player:this.player, ctx:this.ctx },
                 [this.obstacleSprites, this.allSprites]);
             }
             if (style === 'grasses') {
               let randomGrassIndex = Math.floor(Math.random() * 3) + 1;
-              let grass = new Sprite(
+              new Sprite(
                   { x:x, y:y, src:`graphics/grass/grass_${randomGrassIndex}.png`, spriteType:'grass', player:this.player, ctx:this.ctx }
                   , [this.obstacleSprites, this.attackableSprites, this.allSprites]);
             }
             if (style === 'objects') {
               let objectIndex = twoDigitNumber.format(row[colIndex]);
-              let object = new Sprite(
+              new Sprite(
                 { x:x, y:y, src:`graphics/objects/${objectIndex}.png`, spriteType:'object', player:this.player, ctx:this.ctx },
                 [this.obstacleSprites, this.allSprites]);
             }
@@ -74,11 +76,11 @@ class Level {
                 else if (row[colIndex] === '391') { monsterName = 'spirit' }
                 else if (row[colIndex] === '392') { monsterName = 'raccoon' }
                 
-                let enemy = new Enemy(
+                new Enemy(
                   { x:x, y:y, spriteType:monsterName, player:this.player, ctx:this.ctx}
                   , [this.visibleSprites, this.attackableSprites, this.allSprites], 
                   this.obstacleSprites
-                  , this.damagePlayerLogic);
+                  , this.damagePlayerLogic.bind(this));
               }
             }
           }
@@ -120,6 +122,9 @@ class Level {
         this.attackableSprites.forEach(attackableSprite => {
           if (attackableSprite.rect.collideRect(cachedRect)) {
             if (attackableSprite.spriteType === 'grass') {
+              let posX = attackableSprite.x;
+              let posY = attackableSprite.y;
+              // this.animationPlayer.createGrassParticles(posX, posY, [this.visibleSprites, this.allSprites]);
               attackableSprite.delete();
             } else {
               attackableSprite.takeDamage();
@@ -131,6 +136,7 @@ class Level {
   }
 
   damagePlayerLogic(player, damage, attackType) {
+    this.animationPlayer.createAttackParticles(this.player.x, this.player.y, attackType, [this.visibleSprites, this.allSprites]);
     player.health -= damage;
   }
 

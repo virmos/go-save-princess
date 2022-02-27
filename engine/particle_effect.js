@@ -12,7 +12,9 @@ class AnimationPlayer {
       'slash': [],
       'sparkle': [],
       'thunder': [],
-      'leaf': [], 
+      'leaf1': [], 
+      'leaf2': [], 
+      'leaf6': [], 
       'bamboo': [], 
       'spirit': [],
       'raccoon': [],
@@ -47,18 +49,19 @@ class AnimationPlayer {
     this.groups.forEach(group => group.push(this));
   }
 
-  flipFrame() {
+  createDeathParticles(x, y, spriteType, groups) {
+    this.config.x = x;
+    this.config.y = y;
 
-  }
-
-  reflectImages(frames) {
-    let newFrames = []
-    for (let frameIndex in frames) {
-      let frame = frames[frameIndex];
-      let flippedFrame = this.flipFrame(frame);
-      newFrames.push(flippedFrame);
+    let defaultSprite = spriteType;
+    if (spriteType === 'squid') {
+      defaultSprite = 'smoke_orange';
+    } else if (spriteType === 'spirit') {
+      defaultSprite = 'nova';
     }
-    return newFrames;
+
+    this.config.src = `graphics/particles/${defaultSprite}/0.png`;
+    new ParticleEffect(this.config, groups, this.animations[spriteType]);
   }
 
   createAttackParticles(x, y, attackType, groups) {
@@ -69,12 +72,26 @@ class AnimationPlayer {
     new ParticleEffect(this.config, groups, this.animations[attackType]);
   }
 
-  createGrassParticles(x, y, groups) {
+  createMagicParticles(x, y, magicType, groups) {
     this.config.x = x;
     this.config.y = y;
 
-    this.config.src = 'graphics/particles/leaf/leaf1_00000.png';
-    new ParticleEffect(this.config, groups, this.animations['leaf']);
+    let append = '/frames'
+    if (magicType === 'aura') {
+      append = ''
+    }
+
+    this.config.src = `graphics/particles/${magicType}${append}/0.png`;
+    this.config.spriteType = 'magic';
+    new ParticleEffect(this.config, groups, this.animations[magicType]);
+  }
+
+  createGrassParticles(x, y, leafNumber, groups) {
+    this.config.x = x;
+    this.config.y = y;
+
+    this.config.src = `graphics/particles/leaf${leafNumber}/leaf1_00000.png`;
+    new ParticleEffect(this.config, groups, this.animations[`leaf${leafNumber}`]);
   }
 }
 

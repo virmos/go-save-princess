@@ -2,6 +2,7 @@
 class Level {
   constructor(config) {
     this.ctx = config.ctx;
+    this.audio = config.audio;
     this.input = config.input;
     this.src = config.src;
 
@@ -17,15 +18,36 @@ class Level {
   }
 
   isLoaded() {
-    if (SPRITE_COUNTER === this.allSprites.length) {
+    if (SPRITE_COUNTER === this.allSprites.length && AUDIO_LOADED) {
       return true;
     }
     return false;
   }
 
+  reloadGame() {
+    window.location.reload();
+  }
+
   init() {
     this.createMap();
     this.ui = new UI({ player: this.player, ctx:this.ctx });
+
+    Audio.prototype.play = (function(play) {
+      return function () {
+        var audio = this,
+            args = arguments,
+            promise = play.apply(audio, args);
+        if (promise !== undefined) {
+          promise.catch(_ => {
+            // Autoplay was prevented. This is optional, but add a button to start playing.
+            let button = document.getElementById("play");
+            button.addEventListener("click", function(){play.apply(audio, args);});
+          });
+        }
+      };
+      })(Audio.prototype.play);
+    
+    this.audio.themeTracks['level1'].play();
   }
 
   createMap() {
@@ -39,10 +61,11 @@ class Level {
     this.player = new Player({ x:0, y:0, ctx:this.ctx }, 
       [this.visibleSprites, this.allSprites], this.obstacleSprites,
       this.createWeapon.bind(this), this.destroyWeapon.bind(this), 
-      this.createMagic.bind(this), this.destroyMagic.bind(this));
+      this.createMagic.bind(this));
     
     this.animationPlayer = new AnimationPlayer({ player: this.player, ctx:this.ctx }, [ this.visibleSprites, this.allSprites ]);
-
+    this.magicPlayer = new MagicPlayer(this.animationPlayer);
+    
     for (const [style, layoutMap] of Object.entries(layouts)) {
       for (let rowIndex = 0; rowIndex < layoutMap.length; rowIndex++) {
         let row = layoutMap[rowIndex];
@@ -90,21 +113,21 @@ class Level {
     this.mapSprite = new Map({ src: this.src, player:this.player, ctx: this.ctx });
   }
 
-  createMagic(player) {
-    this.magic = new Magic(
-      { player:player, ctx: this.ctx},
-      [this.visibleSprites, this.allSprites]);
+  createMagic(type, strength, cost) {
+    if (type === 'heal') {
+      this.magicPlayer.heal(this.player, strength, cost, [this.visibleSprites, this.allSprites]);
+      this.audio.magicTracks['heal'].play();
+    } else if (type === 'flame') {
+      this.magicPlayer.flame(this.player, cost, [this.visibleSprites, this.attackSprites, this.allSprites]);
+      this.audio.magicTracks['flame'].play();
+    }
   }
 
-  destroyMagic() {
-    // TODO: all sprites still contain this weapon
-    this.weapon.delete();
-  }
-
-  createWeapon(player) {
+  createWeapon() {
     this.weapon = new Weapon(
-      { player:player, ctx: this.ctx},
+      { player:this.player, ctx: this.ctx},
       [this.visibleSprites, this.attackSprites, this.allSprites]);
+    this.audio.attackTracks['weapon'].play();
   }
 
   destroyWeapon() {
@@ -118,16 +141,27 @@ class Level {
         let attackSprite = this.attackSprites[index];
         let currentRect = attackSprite.rect;
         let cachedRect = new Rect(currentRect.x, currentRect.y, currentRect.width, currentRect.height); // weapon will be deleted
-        
+        let cachedAttackType = attackSprite.spriteType;
+
         this.attackableSprites.forEach(attackableSprite => {
           if (attackableSprite.rect.collideRect(cachedRect)) {
             if (attackableSprite.spriteType === 'grass') {
-              let posX = attackableSprite.x;
-              let posY = attackableSprite.y;
-              // this.animationPlayer.createGrassParticles(posX, posY, [this.visibleSprites, this.allSprites]);
+              let posX = attackableSprite.x - 32; // because the animation sprites are wrongly coordinated that we need this hack
+              let posY = attackableSprite.y - 64; // because the animation sprites are wrongly coordinated that we need this hack
+              this.animationPlayer.createGrassParticles(posX, posY, 1, [this.visibleSprites, this.allSprites]);
+              this.animationPlayer.createGrassParticles(posX, posY, 2, [this.visibleSprites, this.allSprites]);
+              this.animationPlayer.createGrassParticles(posX, posY, 6, [this.visibleSprites, this.allSprites]);
               attackableSprite.delete();
             } else {
-              attackableSprite.takeDamage();
+              attackableSprite.takeDamage(cachedAttackType);
+              if (attackableSprite.health <= 0) {
+                let posX = attackableSprite.x;
+                let posY = attackableSprite.y;
+                this.animationPlayer.createDeathParticles(posX, posY, attackableSprite.spriteType, [this.visibleSprites, this.allSprites]);
+                attackableSprite.delete();
+                this.audio.normalDeath.play();
+              }
+              this.audio.normalHit.play();
             }
           }
         }, this)
@@ -137,7 +171,15 @@ class Level {
 
   damagePlayerLogic(player, damage, attackType) {
     this.animationPlayer.createAttackParticles(this.player.x, this.player.y, attackType, [this.visibleSprites, this.allSprites]);
-    player.health -= damage;
+    // this.audio.attackTracks[attackType].play();
+    player.takeDamage(damage);
+    if (player.health <= 0) {
+      player.health = 0;
+      this.audio.deathTracks['player'].play();
+      this.reloadGame();
+    }
+    this.audio.hitTracks['player'].play();
+
   }
 
   update() {

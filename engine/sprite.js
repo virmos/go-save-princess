@@ -6,8 +6,8 @@ class Sprite {
     this.globalAlpha = 1.0;
     this.src = config.src;
     this.spriteType = config.spriteType;
-    this.overlapX = config.overlapX;
-    this.overlapY = config.overlapY;
+    this.overlapX = OVERLAP_X[config.spriteType];
+    this.overlapY = OVERLAP_Y[config.spriteType];
 
     // setup the coordinates
     this.x = config.x;

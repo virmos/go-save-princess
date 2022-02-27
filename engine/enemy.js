@@ -140,12 +140,17 @@ class Enemy extends Entity {
     return this.rect.collideRect(other.rect);
   }
 
-  takeDamage() {
+  takeDamage(attackType) {
     if (this.canBeAttacked) {
       this.canBeAttacked = false;
-      this.health -= this.player.getFullWeaponDamage();
-
+      if (attackType === 'weapon') {
+        this.health -= this.player.getFullWeaponDamage();
+      } else if (attackType === 'magic') {
+        this.health -= this.player.getFullMagicDamage();
+      }
+ 
       if (this.health <= 0) {
+        this.player.recoverEnergy();
         this.delete();
       }
 

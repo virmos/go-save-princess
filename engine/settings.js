@@ -1,17 +1,32 @@
 // counter to check if all sprites are loaded
 SPRITE_COUNTER = 0
+// counter to check if all audios are loaded
+AUDIO_LOADED = false
 
 // game setup
-SCREEN_WIDTH    = 1280	
-SCREEN_HEIGHT   = 720
+SCREEN_WIDTH    = 800	
+SCREEN_HEIGHT   = 600
 FPS      = 60
 TILE_SIZE = 64
-HITBOX_OFFSET = {
-  'player': -26,
-  'object': -40,
-  'grass': -10,
+OVERLAP_Y = {
+  'player': 26,
+  'bamboo': 26,
+  'spirit': 26,
+  'raccoon': 26,
+  'squid': 26,
+  'object': 0,
+  'grass': 0,
   'invisible': 0}
 
+OVERLAP_X = {
+  'player': 10,
+  'bamboo': 10,
+  'spirit': 10,
+  'raccoon': 10,
+  'squid': 10,
+  'object': 0,
+  'grass': 0,
+  'invisible': 0}
 // map
 MAP_WIDTH = 3648
 MAP_HEIGHT = 3200
@@ -58,22 +73,22 @@ magic_data = {
 
 // enemy
 monster_data = {
-  'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
-  'raccoon': {'health': 1000,'exp':250,'damage':60,'attack_type': 'claw',  'attack_sound':'../audio/attack/claw.wav','speed': 2, 'attack_cooldown': 1000, 'resistance': 1, 'attack_radius': 120, 'notice_radius': 400},
-  'spirit': {'health': 200,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'../audio/attack/fireball.wav', 'speed': 4, 'attack_cooldown': 3000 ,'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
-  'bamboo': {'health': 70,'exp':120,'damage':6,'attack_type': 'leaf_attack', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
+  'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
+  'raccoon': {'health': 1000,'exp':250,'damage':60,'attack_type': 'claw', 'speed': 2, 'attack_cooldown': 1000, 'resistance': 1, 'attack_radius': 120, 'notice_radius': 400},
+  'spirit': {'health': 200,'exp':110,'damage':8,'attack_type': 'thunder', 'speed': 4, 'attack_cooldown': 3000 ,'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
+  'bamboo': {'health': 70,'exp':120,'damage':6,'attack_type': 'leaf_attack', 'speed': 3, 'attack_cooldown': 2000, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
 
 player_animation_sprites = {
-  'up': ['graphics/player/up/up_0.png', 'graphics/player/up/up_1.png', 'graphics/player/up/up_2.png', 'graphics/player/up/up_3.png'], 
+  'up': ['graphics/player/up/up_0.png', 'graphics/player/up/up_1.png', 'graphics/player/up/up_2.png', 'graphics/player/up/up_3.png', 'graphics/player/up/up_4.png', 'graphics/player/up/up_5.png', 'graphics/player/up/up_6.png', 'graphics/player/up/up_7.png', 'graphics/player/up/up_8.png', 'graphics/player/up/up_9.png'], 
   'up_idle': ['graphics/player/up_idle/idle_up.png'], 
   'up_attack': ['graphics/player/up_attack/attack_up.png'],
-  'down': ['graphics/player/down/down_0.png', 'graphics/player/down/down_1.png', 'graphics/player/down/down_2.png', 'graphics/player/down/down_3.png',], 
+  'down': ['graphics/player/down/down_0.png', 'graphics/player/down/down_1.png', 'graphics/player/down/down_2.png', 'graphics/player/down/down_3.png', 'graphics/player/down/down_4.png', 'graphics/player/down/down_5.png', 'graphics/player/down/down_6.png', 'graphics/player/down/down_7.png', 'graphics/player/down/down_8.png', 'graphics/player/down/down_9.png'], 
   'down_idle': ['graphics/player/down_idle/idle_down.png'], 
   'down_attack': ['graphics/player/down_attack/attack_down.png'],
-  'left': ['graphics/player/left/left_0.png', 'graphics/player/left/left_1.png', 'graphics/player/left/left_2.png', 'graphics/player/left/left_3.png',], 
+  'left': ['graphics/player/left/left_0.png', 'graphics/player/left/left_1.png', 'graphics/player/left/left_2.png', 'graphics/player/left/left_3.png', 'graphics/player/left/left_4.png', 'graphics/player/left/left_5.png', 'graphics/player/left/left_6.png', 'graphics/player/left/left_7.png', 'graphics/player/left/left_8.png', 'graphics/player/left/left_9.png'], 
   'left_idle': ['graphics/player/left_idle/idle_left.png'], 
   'left_attack': ['graphics/player/left_attack/attack_left.png'],
-  'right': ['graphics/player/right/right_0.png', 'graphics/player/right/right_1.png', 'graphics/player/right/right_2.png', 'graphics/player/right/right_3.png',], 
+  'right': ['graphics/player/right/right_0.png', 'graphics/player/right/right_1.png', 'graphics/player/right/right_2.png', 'graphics/player/right/right_3.png', 'graphics/player/right/right_4.png', 'graphics/player/right/right_5.png', 'graphics/player/right/right_6.png', 'graphics/player/right/right_7.png', 'graphics/player/right/right_8.png', 'graphics/player/right/right_9.png'], 
   'right_idle': ['graphics/player/right_idle/idle_right.png'], 
   'right_attack': ['graphics/player/right_attack/attack_right.png']}
 num_player_animation_sprites = 24
@@ -104,9 +119,9 @@ num_squid_animation_sprites = 10;
   
 particle_effect_sprites = {
   // magic
-  // 'flame': ['graphics/particles/flame/frames/', 'graphics/particles/flame/frames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/', 'graphics/particles/flame/flames/'], 
-  // 'aura': ['graphics/particles/aura/0.png','graphics/particles/aura/1.png', 'graphics/particles/aura/2.png', 'graphics/particles/aura/3.png'],
-  // 'heal':['graphics/particles/frames', 'graphics/particles/frames','graphics/particles/frames', 'graphics/particles/frames', 'graphics/particles/frames'],
+  'flame': ['graphics/particles/flame/frames/01.png', 'graphics/particles/flame/frames/02.png', 'graphics/particles/flame/frames/03.png', 'graphics/particles/flame/frames/04.png', 'graphics/particles/flame/frames/05.png', 'graphics/particles/flame/frames/06.png', 'graphics/particles/flame/frames/07.png', 'graphics/particles/flame/frames/08.png', 'graphics/particles/flame/frames/09.png', 'graphics/particles/flame/frames/10.png', 'graphics/particles/flame/frames/11.png'], 
+  'aura': ['graphics/particles/aura/0.png','graphics/particles/aura/1.png', 'graphics/particles/aura/2.png', 'graphics/particles/aura/3.png'],
+  'heal':['graphics/particles/heal/frames/0.png', 'graphics/particles/heal/frames/1.png','graphics/particles/heal/frames/2.png', 'graphics/particles/heal/frames/3.png', 'graphics/particles/heal/frames/4.png'],
 
   // attacks
   'claw': ['graphics/particles/claw/0.png', 'graphics/particles/claw/1.png', 'graphics/particles/claw/2.png', 'graphics/particles/claw/3.png'], 
@@ -122,9 +137,11 @@ particle_effect_sprites = {
   'spirit': ['graphics/particles/nova/0.png', 'graphics/particles/nova/1.png', 'graphics/particles/nova/2.png', 'graphics/particles/nova/3.png', 'graphics/particles/nova/4.png', 'graphics/particles/nova/5.png'],
 
   // leafs
-  'leaf': ['graphics/particles/leaf/leaf1_00000.png', 'graphics/particles/leaf/leaf1_00001.png', 'graphics/particles/leaf/leaf1_00002.png', 'graphics/particles/leaf/leaf1_00003.png', 'graphics/particles/leaf/leaf1_00004.png', 'graphics/particles/leaf/leaf1_00005.png', 'graphics/particles/leaf/leaf1_00006.png', 'graphics/particles/leaf/leaf1_00007.png', 'graphics/particles/leaf/leaf1_00008.png', 'graphics/particles/leaf/leaf1_00009.png', 'graphics/particles/leaf/leaf1_00010.png', 'graphics/particles/leaf/leaf1_00011.png'], 
+  'leaf1': ['graphics/particles/leaf1/leaf1_00000.png', 'graphics/particles/leaf1/leaf1_00001.png', 'graphics/particles/leaf1/leaf1_00002.png', 'graphics/particles/leaf1/leaf1_00003.png', 'graphics/particles/leaf1/leaf1_00004.png', 'graphics/particles/leaf1/leaf1_00005.png', 'graphics/particles/leaf1/leaf1_00006.png', 'graphics/particles/leaf1/leaf1_00007.png', 'graphics/particles/leaf1/leaf1_00008.png', 'graphics/particles/leaf1/leaf1_00009.png', 'graphics/particles/leaf1/leaf1_00010.png', 'graphics/particles/leaf1/leaf1_00011.png'], 
+  'leaf2': ['graphics/particles/leaf2/leaf1_00000.png', 'graphics/particles/leaf2/leaf1_00001.png', 'graphics/particles/leaf2/leaf1_00002.png', 'graphics/particles/leaf2/leaf1_00003.png', 'graphics/particles/leaf2/leaf1_00004.png', 'graphics/particles/leaf2/leaf1_00005.png', 'graphics/particles/leaf2/leaf1_00006.png', 'graphics/particles/leaf2/leaf1_00007.png', 'graphics/particles/leaf2/leaf1_00008.png', 'graphics/particles/leaf2/leaf1_00009.png', 'graphics/particles/leaf2/leaf1_00010.png', 'graphics/particles/leaf2/leaf1_00011.png', 'graphics/particles/leaf2/leaf1_00012.png'], 
+  'leaf6': ['graphics/particles/leaf6/leaf1_00000.png', 'graphics/particles/leaf6/leaf1_00001.png', 'graphics/particles/leaf6/leaf1_00002.png', 'graphics/particles/leaf6/leaf1_00003.png', 'graphics/particles/leaf6/leaf1_00004.png', 'graphics/particles/leaf6/leaf1_00005.png', 'graphics/particles/leaf6/leaf1_00006.png', 'graphics/particles/leaf6/leaf1_00007.png', 'graphics/particles/leaf6/leaf1_00008.png', 'graphics/particles/leaf6/leaf1_00009.png', 'graphics/particles/leaf6/leaf1_00010.png', 'graphics/particles/leaf6/leaf1_00011.png'], 
 }
-num_particle_effect_sprites = 61;
+num_particle_effect_sprites = 81;
 
 map_grasses = [['-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', 
 '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1'], ['-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', 

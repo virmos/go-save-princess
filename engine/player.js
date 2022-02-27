@@ -20,8 +20,6 @@ class Player extends Entity {
       'right_attack': [],
     }
     config.animationSpeed = 0.24;
-    config.overlapX = 10;
-    config.overlapY = 26,
     super(config, groups, obstacleSprites);
     this.animationIndex = 0;
 
@@ -44,6 +42,10 @@ class Player extends Entity {
     // magic
     this.magicIndex = 0;
     this.magicType = Object.keys(magic_data)[this.magicIndex];
+    let magicStats = magic_data[this.magicType];
+    this.magicStrength = magicStats['strength'];
+    this.magicCost = magicStats['cost'];
+
     this.afterAttackCooldownTimeout = 200;
     this.magicDirection = 'down';
     this.createMagic = createMagic;
@@ -102,7 +104,7 @@ class Player extends Entity {
       this.weaponDirection = this.status.split('_')[0];
       this.isAttacking = true;
       this.canAttack = false;
-      this.createWeapon(this);
+      this.createWeapon();
       
       setTimeout(this.attackWeaponCooldown.bind(this), this.attackCooldownTimeout);
     }
@@ -111,7 +113,7 @@ class Player extends Entity {
       this.magicDirection = this.status.split('_')[0];
       this.isAttacking = true;
       this.canAttack = false;
-      this.createMagic(this);
+      this.createMagic(this.magicType, this.magicStrength, this.magicCost);
       setTimeout(this.attackMagicCooldown.bind(this), this.attackCooldownTimeout);
     }
 
@@ -131,6 +133,10 @@ class Player extends Entity {
         let magicArray = Object.keys(magic_data);
         this.magicIndex = (this.magicIndex >= magicArray.length - 1) ? 0 : this.magicIndex + 1;
         this.magicType = magicArray[this.magicIndex];
+
+        let magicStats = magic_data[this.magicType];
+        this.strength = magicStats['strength'];
+        this.magicCost = magicStats['cost'];
         setTimeout(this.switchMagicCooldown.bind(this), this.switchMagicCooldownTimeout);
       }
       this.canSwitchMagic = false;
@@ -181,7 +187,6 @@ class Player extends Entity {
 
   attackMagicCooldown() {
     this.isAttacking = false;
-    this.destroyMagic();
     setTimeout(this.afterAttackCooldown.bind(this), this.afterAttackCooldownTimeout);
   }
 
@@ -193,23 +198,30 @@ class Player extends Entity {
     let weaponDamage = weapon_data[this.weaponType]['damage'];
     return this.attackDamage + weaponDamage;
   }
+
+  getFullMagicDamage() {
+    return this.magicStrength;
+  }
   
   invincibleCooldown() {
     this.canBeAttacked = true;
     this.globalAlpha = 1.0;
   }
 
-  takeDamage() {
+  takeDamage(damage) {
     if (this.canBeAttacked) {
       this.canBeAttacked = false;
 
-      if (this.health <= 0) {
-        this.delete();
-      }
-
+      this.health -= damage;
       this.globalAlpha = 0.3;
       setTimeout(this.invincibleCooldown.bind(this), this.invincibleTimeout);
     }
+  }
+
+  recoverEnergy() {
+    this.energy += this.stats['magic'];
+    if (this.energy >= this.stats['energy'])
+      this.energy = this.stats['energy'];
   }
 
   update(state) {

@@ -7,7 +7,9 @@ class Game {
 
     this.input = new Keyboard();
     this.input.init();
-    this.level = new Level({ src: "graphics/tilemap/ground.png", ctx: this.ctx, input: this.input });
+
+    this.audio = new AudioPlayer();
+    this.level = new Level({ src: "graphics/tilemap/ground.png", ctx: this.ctx, audio: this.audio, input: this.input });
   }
 
   init() {

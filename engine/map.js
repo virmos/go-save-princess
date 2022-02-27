@@ -11,6 +11,10 @@ class Map extends Sprite {
   init() { this.isLoaded = true; }
 
   draw() {
+    // draw all ctx water color
+    this.ctx.fillStyle = WATER_COLOR;
+    this.ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
     let offsetX = (this.player.x + TILE_SIZE / 2) - SCREEN_WIDTH / 2;   // during loading, 
     let offsetY = (this.player.y + TILE_SIZE / 2) - SCREEN_HEIGHT / 2;  // player.rect null
 

@@ -3,6 +3,7 @@ class Weapon extends Sprite {
     config.x = config.player.x;
     config.y = config.player.y;
     config.src = `graphics/weapons/${config.player.weaponType}/${config.player.weaponDirection}.png`;
+    console.log(config.src)
     config.spriteType = 'weapon';
     super(config, groups);
   }

@@ -1,4 +1,4 @@
-audio/
-graphics/
-images/
-map/
+node_modules/
+requests/
+access.log
+.env
